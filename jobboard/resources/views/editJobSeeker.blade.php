@@ -19,7 +19,7 @@
     <form action="{{route('jobSeeker.update')}}" class=" p-5 border rounded " method="POST">
         <h1>Profile</h1>
         @csrf
-        <div class="form-group">
+        <div class="mb-3">
             <label for="name">Enter Your Name</label>
             <input type="text"  value="{{old('name',$jobSeeker->name)}}" class="form-control @error('name') is-invalid  @enderror" id="name" name="name" placeholder="Enter Employee Name">
             <span class="text-danger">
@@ -28,7 +28,7 @@
               @enderror
           </span>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="email">Enter Your Email</label>
             <input type="text" value="{{old('email',$jobSeeker->email)}}" id="email" class="form-control @error('email') is-invalid  @enderror" name="email" placeholder="Enter Your Email">
             <span class="text-danger">
@@ -38,7 +38,7 @@
           </span>
           </div>
           
-          <div class="form-group">
+          <div class="mb-3">
             <label for="education">Enter Your education</label>
             <input type="text" value="{{old('education',$jobSeeker->education)}}" class="form-control @error('education') is-invalid  @enderror" id="education" name="education" placeholder="Enter Your education">
             <span class="text-danger">
@@ -47,7 +47,7 @@
               @enderror
           </span>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="experience">Enter Your experience</label>
             <input type="text" value="{{old('experience',$jobSeeker->experience)}}" id="experience" class="form-control @error('experience') is-invalid  @enderror" name="experience" placeholder="Confirm Your experience">
             <span class="text-danger">
@@ -56,7 +56,7 @@
               @enderror
           </span>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="skills">Enter Your Skills</label>
             <input type="text" value="{{old('skills',$jobSeeker->skills)}}" id="skills" class="form-control @error('skills') is-invalid  @enderror" name="skills" placeholder="Enter Your skills">
             <span class="text-danger">
@@ -65,7 +65,7 @@
               @enderror
           </span>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="facebook_link">Enter Your facebook_link</label>
             <input type="text" value="{{old('facebook_link',$jobSeeker->facebook_link)}}" id="facebook_link" class="form-control @error('facebook_link') is-invalid  @enderror" name="facebook_link" placeholder="Enter Your facebook_link">
             <span class="text-danger">
@@ -74,7 +74,7 @@
               @enderror
           </span>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="linkedin_link">Enter Your linkedin_link</label>
             <input type="text" value="{{old('linkedin_link',$jobSeeker->linkedin_link)}}" id="linkedin_link" class="form-control @error('linkedin_link') is-invalid  @enderror" name="linkedin_link" placeholder="Enter Your linkedin_link">
             <span class="text-danger">
@@ -83,7 +83,7 @@
               @enderror
           </span>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="twitter_link">Enter Your twitter_link</label>
             <input type="text" value="{{old('twitter_link',$jobSeeker->twitter_link)}}" id="twitter_link" class="form-control @error('twitter_link') is-invalid  @enderror" name="twitter_link" placeholder="Enter Your twitter_link">
             <span class="text-danger">
@@ -101,7 +101,7 @@
     <form action="{{route('jobSeeker.updateCV')}}" class="p-4 border rounded " method="POST" enctype="multipart/form-data">
       <h1 class="">Add/Update CV</h1>
       @csrf
-      <div class="form-group">
+      <div class="mb-3">
         <label for="cv">Upload Your CV</label>
         <input name="cv" type="file" class="form-control @error('cv') is-invalid  @enderror" id="cv">
         <span class="text-danger">
@@ -121,7 +121,7 @@
   <form action="{{route('jobSeeker.updateImage')}}" class=" p-4 border rounded " method="POST" enctype="multipart/form-data">
     <h1>Add/Update Image</h1>
     @csrf
-    <div class="form-group">
+    <div class="mb-3">
       <label for="image">Upload Your image</label>
       <input name="image"  type="file" class="form-control @error('image') is-invalid  @enderror" id="image">
       <span class="text-danger">

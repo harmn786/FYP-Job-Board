@@ -16,7 +16,7 @@
     {{-- <div class="border-bottom"></div> --}}
   <form action="{{route('userlog')}}"  method="POST" class="mt-2">
     @csrf
-    <div class="form-group">
+    <div class="mb-3">
       <label for="email">Email</label>
       <input name="email" value="{{old('email')}}" type="text" class="form-control @error('email') is-invalid  @enderror" id="email" placeholder="Enter Your Email">
       <span class="text-danger">
@@ -25,7 +25,7 @@
         @enderror
     </span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
       <label for="password">Password</label>
       <input name="password" value="{{old('password')}}" type="password" class="form-control @error('password') is-invalid  @enderror" id="email" placeholder="Enter Your Password">
       <span class="text-danger">
@@ -34,7 +34,9 @@
         @enderror
     </span>
     </div>
-    <Button type="submit" class="btn btn-success btn-block" name="submit" style="width:100%; ">Submit</Button>
+    <div class="mb-3">
+    <Button type="submit" class="btn btn-success btn-block " name="submit" style="width:100%; ">Submit</Button>
+    </div>
     <div class="form-group choice">
     <span class="log-condition">(Not a Member) <a href="{{route('userregister')}}">Sign Up First</a></span>
     <span class="reset-password"><a href="{{route('forgetPassword') }}">Forgot Password!</a></span>

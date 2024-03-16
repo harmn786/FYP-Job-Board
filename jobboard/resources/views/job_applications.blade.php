@@ -20,8 +20,7 @@
     <h2 class="">Applied Jobs</h2>
 
     @if(count($jobApplications) > 0)
-        <table class="table table-striped table-responsive mt-4  border-0 rounded w-100 ml-auto mr-auto shadow">
-            <caption class="">Applied Jobs</caption>
+        <table class="table table-bordered table-striped table-responsive mt-4  border-0 rounded w-100 ml-auto mr-auto shadow">
             <thead>
                 <tr class="bg-dark text-white">
                     <th>Job Title</th>

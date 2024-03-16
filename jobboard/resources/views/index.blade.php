@@ -1,42 +1,42 @@
 @extends('master')
 @section('content')
 
-<div class="row hero">
     @if(session()->get('success'))
   <div class="alert alert-success" role="alert">
     <strong>Success: </strong>{{session()->get('success')}}
   </div>
   @endif
-  <div class="container">
     <div class="wraper">
+        <div class="container">
         <div class="col-12 col-xl-8 pt-5">
             <h1 class="hero-heading text-white">Find your dream job</h1>
             <p class="hero-sub-heading text-white">Thounsands of jobs available.</p>
             <div class="banner-btn mt-5"><a href="#" class="btn btn-success mb-4 mb-sm-0">Explore Now</a></div>
         </div>
     </div>
-  </div>
+    </div>
 </div>
     <section class="site-section">
         <div class="container">
         {{-- Search Form --}}
-        <form method="get" action="{{ route('jobs.index') }}" class="customize-form pt-5 pb-4" style=" min-width:100%; padding: 20px; ">
-            <div class="form-row">
+        <form method="get" action="{{ route('jobs.index') }}" class="customize-form  pt-5 pb-5 rounded" style=" min-width:100%; padding: 20px; ">
+            <div class="row">
                 <div class="form-group col-md-3">
-                    <input type="text" class="form-control" id="title" name="title" value="{{ request('title') }}" placeholder="Job-Title">
+                    <input type="text" class="form-control mb-2 mt-2" id="title" name="title" value="{{ request('title') }}" placeholder="Job-Title">
                 </div>
                 <div class="form-group col-md-3">
-                    <input type="text" class="form-control" id="category" name="category" value="{{ request('category') }}" placeholder="Job-Category">
+                    <input type="text" class="form-control mb-2 mt-2" id="category" name="category" value="{{ request('category') }}" placeholder="Job-Category">
                 </div>
                 <div class="form-group col-md-3">
-                    <input type="text" class="form-control" id="location" name="location" value="{{ request('location') }}" placeholder="Job-Location">
+                    <input type="text" class="form-control mb-2 mt-2" id="location" name="location" value="{{ request('location') }}" placeholder="Job-Location">
                 </div>
                 <div class="form-group col-md-3">
-                    <button type="submit" class="btn btn-success" style=" min-width:100%; " >Search</button>
+                    <button type="submit" class="btn btn-success mb-2 mt-2" style=" min-width:100%; " >Search</button>
                 </div>
-            </div>
-</form>
+            </div></form>
 
+
+            
           <h2 class="" >Available Jobs</h2>
 <div class="row">
 @foreach($jobs as $job)

@@ -17,9 +17,10 @@
 @endif
 
   <div class="card border-0 shadow mb-4 p-4">
-    <h3>Posted Jobs</h3>
+    <h2>Posted Jobs</h2>
         @if(count($jobs) > 0)
-            <table class="table table-striped table-responsive  border-0 rounded w-100 ml-auto mr-auto shadow mt-4"class="table table-striped">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped   border-0 rounded w-100 ml-auto mr-auto shadow mt-4"class="table table-striped">
                 <thead class="text-white bg-dark">
                     <tr>
                         <th>Title</th>
@@ -60,6 +61,7 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
             <div>
 
             </div>

@@ -84,7 +84,7 @@
                               @if (auth()->check() && auth()->user()->jobSeeker)
                               <form action="{{ route('jobs.addToFavorites', $job->id) }}" method="post">
                                       @csrf
-                                      <button type="submit" class="btn btn-warning">Add to Favorites</button>
+                                      <button type="submit" class="btn btn-warning mb-4">Add to Favorites</button>
                                   </form>
                                 
                               @endif
@@ -93,12 +93,12 @@
                               @if (auth()->check() && auth()->user()->jobSeeker)
                               <form action="{{ route('jobs.applyJob', $job->id) }}" method="post">
                                   @csrf
-                                  <button type="submit" class="btn btn-success mt-4">Apply For Job</button>
-                                  <a href="{{ route('home') }}" class="btn btn-primary" style="float: right;">Back to Job Listings</a>
+                                  <button type="submit" class="btn btn-success  float-start">Apply For Job</button>
+                                  <a href="{{ route('home') }}" class="btn btn-primary float-end">Back to Job Listings</a>
                               </form>
 
                               @else
-                                  <a href="{{ route('userlogin') }}" class="btn btn-success" style="float: right;">Login To Apply for Job</a>
+                                  <a href="{{ route('userlogin') }}" class="btn btn-success float-start" >Login To Apply for Job</a>
                                   <a href="{{ route('home') }}" class="btn btn-primary" style="">Back to Job Listings</a>
                               @endif
                               {{-- <a href="#" class="btn btn-primary">Apply</a> --}}

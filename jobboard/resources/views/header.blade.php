@@ -7,87 +7,77 @@ if(Session::has('user')){
 }
 
 @endphp
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
-    <div class="container">
-    <a class="navbar-brand text-success" href="{{route('home')}}">Job-Board</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg navbar-light bg-light py-3 align-items-center">
+  <div class="container">
+    <a class="navbar-brand d-inline" href="{{route('home')}}">Job-Board</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown" >
-      <ul class="navbar-nav ml-auto ">
-        <li class="nav-item active" >
-          <a class="nav-link" style="color:seagreen !important;" href="{{route('home')}}">Home</a>
-        </li>
-        {{-- @if (Session::has('user'))
-          @if ($userdata->role === "company")
-          <li class="nav-item active" >
-            <a class="nav-link" href="{{route('jobs.create')}}">+Post Job </a>
-          </li>
-          <li class="nav-item active" >
-            <a class="nav-link" href="{{route('employer.postedJobs')}}">Posted Jobs </a>
-          </li>
-          @endif
-          @if ($userdata->role === "job_seeker")
-          <li class="nav-item active" >
-            <a class="nav-link"  href="{{route('favorites.index')}}">Favorites </a>
-          </li>
-          <li class="nav-item active" >
-            <a class="nav-link" href="{{route('job_applications.index')}}">Applied Jobs </a>
-          </li>
-          @endif
-
-          @if ($userdata->role === "admin")
-          <li class="nav-item active" >
-            <a class="nav-link" href="{{route('companies')}}">Companies</a>
-          </li>
-          <li class="nav-item active" >
-            <a class="nav-link" href="{{route('admin.jobApprovals')}}">Job Requests</a>
-          </li>
-          @endif
-        @endif --}}
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+      <ul class="navbar-nav   mb-2 mb-lg-0 ms-auto ">
         <li class="nav-item">
-          <a class="nav-link" href="#">About Us</a>
+          <a class="nav-link active" aria-current="page" href="{{route('home')}}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="">About Us</a>
         </li>
         <li class="nav-item dropdown">
+
           @if (Session::has('user'))
           
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             {{Session::get('user')['name']}}
           </a>
+            
           @else
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             User
           </a>
           @endif
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            @if(!Session::has('user'))
-            <a class="dropdown-item" href="{{route('userregister')}}">Register</a>
-            <a class="dropdown-item" href="{{route('userlogin')}}">Login</a>
-            @else
-            <a class="dropdown-item" href="/logout">Logout</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+            @if(Session::has('user'))
             @if ($userdata->role === "job_seeker" || $userdata->role === "company" || $userdata->role === "admin")
-            <a class="dropdown-item" href="{{route('dashboard')}}">Profile</a>
+            <li><a class="dropdown-item" href="{{route('dashboard')}}">Dashboard</a></li>
             @endif
             @endif
-          </div>
+          </ul>
+          @if(!Session::has('user'))
+          <li class="nav-item">
+            <a class="nav-link btn btn-outline-success me-2 " href="{{route('userlogin')}}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-success text-white" href="{{route('userregister')}}">Register</a>
+          </li>
+          @else
+
+          {{-- @if ($userdata->role === "job_seeker" || $userdata->role === "company" || $userdata->role === "admin")
+          <li class="nav-item">
+            <a class="nav-link " href="{{route('dashboard')}}">Dashboard</a>
+          </li>
+          @endif --}}
+
+          
+          <li class="nav-item">
+            <a class="nav-link btn btn-success text-white me-4" href="/logout">Logout</a>
+          </li>
+          @endif
         </li>
-      </ul>
-      @if (Session::has('user') && $userdata->role === "job_seeker")
-      <ul class="navbar-nav ">
+
+
+
+		@if (Session::has('user') && $userdata->role === "job_seeker")
         <li class="nav-item">
           <img src="{{asset('storage/' .$userdata->jobSeeker->img_path)}}" class="user-img" alt="user-img">
         </li>
-        </ul>
         @endif
 
-        @if (Session::has('user') && $userdata->role === "company")
-      <ul class="navbar-nav ">
+		@if (Session::has('user') && $userdata->role === "company")
         <li class="nav-item">
           <img src="{{asset('storage/' .$userdata->employer->img_path)}}" class="user-img" alt="user-img">
         </li>
-        </ul>
         @endif
+      </ul>
     </div>
-</div>
+  </div>
 </nav>

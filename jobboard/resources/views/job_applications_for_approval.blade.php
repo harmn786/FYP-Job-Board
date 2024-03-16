@@ -19,7 +19,7 @@
 
   <div class="card border-0 shadow mb-4 p-2">
     <h3 class="mt-3">Job Applications for {{ $job->title }} Job</h3>
-<table class="table table-striped mt-4 table-responsive border-0 rounded w-100 ml-auto mr-auto shadow">
+<table class="table table-striped table-bordered mt-4 table-responsive border-0 rounded w-100 ml-auto mr-auto shadow">
     <thead class="bg-dark text-white">
         <tr>
             <th>Applicant Name</th>

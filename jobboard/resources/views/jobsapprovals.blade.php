@@ -17,7 +17,7 @@
 @endif
 
   <div class="card border-0 shadow mb-4 p-3">
-    <h3>Job Approvals</h3>
+    <h2>Job Approvals</h2>
 
         @if(count($jobsPendingApproval) > 0)
             <table class="table table-striped table-responsive mt-4  border-0 rounded w-100 ml-auto mr-auto ">
