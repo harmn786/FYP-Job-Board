@@ -3,7 +3,7 @@ use App\Models\User;
    $userdata = User::Find(Session::get('user')['id']);
    compact('userdata');
 @endphp
-@extends('master')
+@extends('front.app.master')
 @section('content')
 @if(session()->get('message'))
   <div class="alert alert-success" role="alert">

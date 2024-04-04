@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('employers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->string('email');
+            $table->string('cnic')->nullable();
             $table->string('industry')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('company_type')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('contact_number')->nullable();
-            $table->string('posted_jobs')->nullable();
-            $table->string('img_path')->nullable();
             $table->string('facebook_link')->nullable();
             $table->string('twitter_link')->nullable();
             $table->string('linkedin_link')->nullable();

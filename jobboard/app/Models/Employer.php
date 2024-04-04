@@ -22,7 +22,6 @@ class Employer extends Model
         'industry',
         'contact_person',
         'contact_number',
-        'img_path'
     ];
     public $timestamps = false;
 }

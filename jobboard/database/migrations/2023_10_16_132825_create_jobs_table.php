@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employer_id')->constrained('employers');
+            $table->foreignId('employer_id')->constrained('employers')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('title');
             $table->string('location');
             $table->string('type');
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('company_name');
             $table->string('company_image')->nullable();
             $table->boolean('approved_by_admin')->default(false);
+            $table->boolean('featured')->default(false);
             $table->string('remarks')->nullable();
             $table->timestamps();
         });

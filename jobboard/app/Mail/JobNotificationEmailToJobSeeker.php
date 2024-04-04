@@ -38,7 +38,7 @@ class JobNotificationEmailToJobSeeker extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'job-notification-email-to-jobseeker',
+            view: 'jobseeker.mail.job-notification-email-to-jobseeker',
         );
     }
 

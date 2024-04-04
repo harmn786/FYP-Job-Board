@@ -22,6 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'img_path',
         'role',
     ];
     public $timestamps = false;

@@ -14,15 +14,17 @@ return new class extends Migration
     {
         Schema::create('job_seekers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->string('email');
+            $table->string('cnic')->nullable();
+            $table->date('dob')->nullable();
+            $table->string('title')->nullable();
+            $table->string('address')->nullable();
             $table->string('education')->nullable();
             $table->string('experience')->nullable();
             $table->string('skills')->nullable();
-            $table->string('applied_jobs')->nullable();
             $table->string('cv_path')->nullable();
-            $table->string('img_path')->nullable();
             $table->string('facebook_link')->nullable();
             $table->string('twitter_link')->nullable();
             $table->string('linkedin_link')->nullable();

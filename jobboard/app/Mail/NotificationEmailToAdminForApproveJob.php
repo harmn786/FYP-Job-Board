@@ -38,7 +38,7 @@ class NotificationEmailToAdminForApproveJob extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'notification-email-to-admin-for-approve-job',
+            view: 'admin.mail.notification-email-to-admin-for-approve-job',
         );
     }
 

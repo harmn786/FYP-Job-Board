@@ -8,17 +8,19 @@ use App\Models\Employer;
 use App\Models\User;
 use App\Models\JobApplication;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use App\Mail\NotificationEmailToAdminForApproveJob;
 use App\Mail\NotificationEmailToEmployerPostJob;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Pagination\Paginator;
-use ZipArchive;
-
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\JobApplicantsExport;
 use App\Models\Admin;
+use App\Models\JobSeeker;
+use Exception;
+use ZipArchive;
 
 class EmployerController extends Controller
 {
@@ -27,7 +29,7 @@ class EmployerController extends Controller
     {
         $user = auth()->user();
         $employer = $user->Employer;
-        return view('editEmployer', compact('employer'));
+        return view('employer.editEmployer', compact('employer'));
     }
 
     public function create_job()
@@ -35,7 +37,7 @@ class EmployerController extends Controller
         $user = auth()->user();
         $employer = $user->Employer;
         if($user->role == 'company'){
-            return view('job_create');
+            return view('employer.job_create');
         }
     }
     
@@ -62,7 +64,7 @@ class EmployerController extends Controller
         $user = auth()->user();
         $employer = $user->Employer;
         // Create a new job with status set to pending
-        if(!$employer->img_path){
+        if($employer->contact_no == Null && $employer->contact_person == Null && $employer->industry == Null){
             return redirect()->route('jobs.create')->with('success', 'Please Complete Ypur Profile to Post a Job');
         }
         $job = $employer->jobs()->create([
@@ -84,6 +86,8 @@ class EmployerController extends Controller
             'employer_id' => $employer->id,
             'company_image' => $employer->img_path,
             'approved_by_admin' => false,
+            'created_at' => now(),
+            'updated_at '=> now(),
         ]);
         $mailData = [
             'employer' => $employer,
@@ -128,16 +132,17 @@ class EmployerController extends Controller
         $user = auth()->user();
         $employer = $user->Employer;
 
-        $request->validate([
+        $validator = Validator::make( $request->all(),[
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Remove the existing profile image
-        if ($employer->img_path) {
-            Storage::disk('public')->delete($employer->img_path);
-        }
+        if($validator->passes()){
 
-        // Generate a unique filename for the profile image
+             // Remove the existing profile image
+        if ($employer->img_path) {
+            File::delete(storage_path('app/public/'.$employer->img_path));
+        }
+            // Generate a unique filename for the profile image
         $imageFileName = 'profile_image_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
 
         // Upload the new profile image
@@ -145,8 +150,20 @@ class EmployerController extends Controller
         
         // Update profile image file path in the database
         $employer->update(['img_path' => $imagePath]);
+        session()->flash('success', 'Profile image updated successfully.');
+        return response()->json([
+            'status'=> true,
+            'errors'=> []
+        ]);
+        }
+        else{
+            return response()->json([
+                'status'=>false,
+                'errors'=> $validator->errors()
+            ]);
+        }
 
-        return redirect()->route('editEmployer')->with('success', 'Profile image updated successfully.');
+        
     }
 
     // public function jobApplications()
@@ -193,13 +210,13 @@ class EmployerController extends Controller
 
         // Fetch jobs posted by the logged-in employer
         $jobs = $user->employer->jobs;
-        return view('posted_jobs', compact('jobs'));
+        return view('employer.posted_jobs', compact('jobs'));
     }
 
     public function editJob(Request $request,Job $job)
     {
         // Show the form for editing the job details
-        return view('update_job', compact('job'));
+        return view('employer.update_job', compact('job'));
     }
 
     public function updateJob(Request $request, Job $job)
@@ -247,12 +264,20 @@ class EmployerController extends Controller
         return redirect()->route('employer.postedJobs')->with('success', 'Job details updated successfully.');
     }
 
+    public function deleteJob(Request $request, Job $job)
+    {
+        $delete = $job->delete();
+        if($delete){
+            return redirect()->route('employer.postedJobs')->with('success', 'Job deleted successfully.');
+        }
+    }
+
     public function showJobApplications($jobId)
     {
         $job = Job::findOrFail($jobId);
         $jobApplications = JobApplication::where('job_id', $jobId)->paginate(5);
 
-        return view('job_applications_for_approval', compact('job', 'jobApplications'));
+        return view('employer.job_applications_for_approval', compact('job', 'jobApplications'));
     }
 
     public function approveJobApplication(Request $request, $applicationId)
@@ -272,6 +297,7 @@ class EmployerController extends Controller
     
     public function downloadCVs($jobId)
     {
+        
         // Get job applications related to the given job ID
         $jobApplications = JobApplication::where('job_id', $jobId)->get();
         // Create a temporary directory to store the CV files
@@ -296,7 +322,12 @@ class EmployerController extends Controller
         // Clean up the temporary directory
         File::deleteDirectory($tempDir);
         // Download the zip file
-        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        try{
+            return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        }
+        catch(Exception $e){
+            return redirect()->back()->with('error', 'No Applicants Founds');
+        }
     }
 
 
@@ -308,6 +339,12 @@ class EmployerController extends Controller
         // Generate and download Excel sheet
         return Excel::download(new JobApplicantsExport($jobApplications), 'applicants.xlsx');
     }
-    
+
+    public function jobSeekerDetail(Request $request,JobSeeker $jobSeeker)
+    {
+        // Show the form for editing the job details
+        return view('employer.jobseekerDetail', compact('jobSeeker'));
+    }
+
 }
 

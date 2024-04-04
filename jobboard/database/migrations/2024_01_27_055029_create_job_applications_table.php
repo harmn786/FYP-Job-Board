@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('job_applications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('job_id')->constrained('jobs');
-            $table->foreignId('job_seeker_id')->constrained('job_seekers');
+            $table->foreignId('job_id')->constrained('jobs')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('job_seeker_id')->constrained('job_seekers')->cascadeOnDelete()->cascadeOnUpdate();
             $table->dateTime('application_date');
             $table->string('status')->default('pending');
             $table->string('remarks')->nullable();

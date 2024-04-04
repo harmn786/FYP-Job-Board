@@ -3,6 +3,7 @@ namespace App\Exports;
 use App\Export\UsersExport;
 
 use App\Models\JobApplication;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -26,6 +27,9 @@ class JobApplicantsExport implements FromCollection,WithHeadings
                 'Experience' => $jobApplication->jobSeeker->experience,
                 'Skills' => $jobApplication->jobSeeker->skills,
                 'Status' => $jobApplication->status,
+                'cnic' => $jobApplication->jobSeeker->cnic,
+                'dob' => $jobApplication->jobSeeker->dob ,
+                'address' => $jobApplication->jobSeeker->address,
                 // Add more fields or related data as needed
             ];
         });
@@ -40,6 +44,9 @@ class JobApplicantsExport implements FromCollection,WithHeadings
             'Experience',
             'Skills',
             'Status',
+            'CNIC',
+            'DOB',
+            'Address'
             // Add more headings as needed
         ];
     }

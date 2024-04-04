@@ -15,6 +15,7 @@ use App\Models\Favorite;
 use App\Models\Employer;
 use App\Models\Job;
 use App\Models\JobApplication;
+use Illuminate\Support\Facades\File;
 use Session;
 
 class JobSeekerController extends Controller
@@ -26,7 +27,7 @@ class JobSeekerController extends Controller
     {
         $user = auth()->user();
         $jobSeeker = $user->jobSeeker;
-        return view('editJobSeeker', compact('jobSeeker'));
+        return view('jobseeker.editJobSeeker', compact('jobSeeker'));
     }
     public function update(Request $request)
     {
@@ -43,6 +44,10 @@ class JobSeekerController extends Controller
         $update = $jobSeeker->update([
             'name' => $user->name,
             'email' => $user->email,
+            'title' => $request->input('title'),
+            'cnic' => $request->input('cnic'),
+            'dob' => $request->input('dob'),
+            'address' => $request->input('address'),
             'education' => $request->input('education'),
             'experience' => $request->input('experience'),
             'skills' => $request->input('skills'),
@@ -86,16 +91,17 @@ class JobSeekerController extends Controller
         $user = auth()->user();
         $jobSeeker = $user->jobSeeker;
 
-        $request->validate([
+        $validator = Validator::make( $request->all(),[
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Remove the existing profile image
-        if ($jobSeeker->img_path) {
-            Storage::disk('public')->delete($jobSeeker->img_path);
-        }
+        if($validator->passes()){
 
-        // Generate a unique filename for the profile image
+             // Remove the existing profile image
+        if ($jobSeeker->img_path) {
+            File::delete(storage_path('app/public/'.$jobSeeker->img_path));
+        }
+            // Generate a unique filename for the profile image
         $imageFileName = 'profile_image_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
 
         // Upload the new profile image
@@ -103,8 +109,20 @@ class JobSeekerController extends Controller
         
         // Update profile image file path in the database
         $jobSeeker->update(['img_path' => $imagePath]);
+        session()->flash('success', 'Profile image updated successfully.');
+        return response()->json([
+            'status'=> true,
+            'errors'=> []
+        ]);
+        }
+        else{
+            return response()->json([
+                'status'=>false,
+                'errors'=> $validator->errors()
+            ]);
+        }
 
-        return redirect()->route('editJobSeeker')->with('success', 'Profile image updated successfully.');
+        
     }
 
     public function applyJob($jobId)
@@ -142,7 +160,7 @@ class JobSeekerController extends Controller
         // Mail::to($employer->email,$jobSeeker->email)->send(new JobNotificationEmailToEmployer($mailData),new JobNotificationEmailToJobSeeker($mailData));
         Mail::to($employer->email)->send(new JobNotificationEmailToEmployer($mailData));
         Mail::to($jobSeeker->email)->send(new JobNotificationEmailToJobSeeker($mailData));
-        return redirect()->route('jobs.show', $jobId)->with('message', 'Job application submitted!');
+        return redirect()->route('jobs.show', $jobId)->with('success', 'Job application submitted!');
     }
 
     public function addToFavorites($jobId)
@@ -161,7 +179,7 @@ class JobSeekerController extends Controller
             }
         // Check if the job is already in favorites
 
-        return redirect()->route('jobs.show', $jobId)->with('message', 'Job added to favorites!');
+        return redirect()->route('jobs.show', $jobId)->with('success', 'Job added to favorites!');
     }
     public function favorite_jobs()
     {
@@ -169,7 +187,7 @@ class JobSeekerController extends Controller
 
         $favorites = $user->jobSeeker->favorites;
 
-        return view('favorites', compact('favorites'));
+        return view('jobseeker.favorites', compact('favorites'));
     }
     public function applications()
     {
@@ -178,23 +196,20 @@ class JobSeekerController extends Controller
         // Fetch job applications for the logged-in job seeker
         $jobApplications = $user->jobSeeker->jobApplications;
 
-        return view('job_applications', compact('jobApplications'));
+        return view('jobseeker.job_applications', compact('jobApplications'));
     }
 
-    public function removeFavorite(Request $request)
+    public function removeFavorite($favoriteId )
     {
-        $request->validate([
-            'job_id' => 'required|exists:jobs,id',
-        ]);
 
-        $user = auth()->user();
-        $jobId = $request->input('job_id');
+        $jobSeekerID = auth()->user()->jobSeeker->id;
+        $jobId = $favoriteId;
 
-        $favorite = Favorite::where('job_id', $jobId)
+        $favorite = Favorite::where('job_id', $jobId,)->where('job_seeker_id',$jobSeekerID)
                             ->first();
         if ($favorite) {
             $favorite->delete();
-            return redirect()->route('favorites.index')->with('message', 'Job removed from favorites.');
+            return redirect()->back()->with('success', 'Job removed from favorites.');
         } else {
             return redirect()->route('favorites.index')->with('error', 'Job is not in favorites.');
         }

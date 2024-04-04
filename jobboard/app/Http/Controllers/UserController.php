@@ -13,7 +13,8 @@ use App\Models\User;
 use App\Models\JobSeeker;
 use App\Models\Employer;
 use App\Models\Admin;
-use Storage;
+use Exception;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -22,8 +23,9 @@ use Illuminate\Contracts\Session\Session as SessionSession;
 
 class UserController extends Controller
 {
+    
     public function forgetPassword(){
-        return view('forget_password');
+        return view('front.account.forget_password');
     }
     public function forgetPasswordPost(Request $request){
         $request->validate([
@@ -35,14 +37,14 @@ class UserController extends Controller
             'token'=>$token,
             'created_at'=>Carbon::now()
         ]);
-        Mail::send("forget_password_mail_template",['token'=>$token],function($message) use ($request){
+        Mail::send("front.account.forget_password_mail_template",['token'=>$token],function($message) use ($request){
             $message->to($request->email);
             $message->subject('Reset Password');
         });
-        return redirect()->to(route('forgetPassword'))->with('message','we have send a mail to your email to reset password');
+        return redirect()->to(route('forgetPassword'))->with('success','we have send a mail to your email to reset password');
     }
     public function resetPassword($token){
-        return view('new_password',compact('token'));
+        return view('front.account.new_password',compact('token'));
     }
     public function resetPasswordPost(Request $request){
         $request->validate([
@@ -60,7 +62,7 @@ class UserController extends Controller
         }
         User::where('email',$request->email)->update(['password'=>Hash::make($request->password)]);
         DB::table('password_reset')->where(['email'=>$request->email])->delete();
-        return redirect()->to(route('userlogin'))->with('message','Password Reset Successfully');
+        return redirect()->to(route('userlogin'))->with('success','Password Reset Successfully');
     }
     // function that validate inputs and register the user
     //  and also call the fuction to add data to their specific role model
@@ -86,7 +88,7 @@ class UserController extends Controller
         if($user){
             $this->insertProfileData($user, $req);
             $this->sendVerificationEmail($user);
-            return redirect()->route('userlogin')->with('message','Registered Successfully');
+            return redirect()->route('userlogin')->with('success','Please verify your email to access dashboard check your inbox or spam folder to verify');
         }
         else{
             return redirect()->back();
@@ -95,16 +97,21 @@ class UserController extends Controller
     public function verificationEmailMessage(){
         $user = Auth::user();
         $this->sendVerificationEmail($user);
+        
         return redirect()->route('verification')->with('success','Email send successfully please check your inbox or spam folder ');
     }
     
    private function sendVerificationEmail($user)
     {
         $verificationUrl = route('verify', ['id' => $user->id]);
-
-        Mail::send('verify', ['verificationUrl' => $verificationUrl], function ($message) use ($user) {
-            $message->to($user->email)->subject('Verify Your Email Address');
+        try{
+            Mail::send('front.account.verify', ['verificationUrl' => $verificationUrl], function ($message) use ($user) {
+                $message->to($user->email)->subject('Verify Your Email Address');
         });
+        }
+        catch(Exception  $e){
+            // return redirect()->route('verification')->with('error',$e->getMessage() );
+        }
     }
 
     public function verify($id)
@@ -116,7 +123,7 @@ class UserController extends Controller
         return redirect()->route('userlogin')->with('success', 'Email verified successfully. You can now login.');
     }
     public function verification(){
-        return view('verification');
+        return view('front.account.verification');
     }
 
     // function that store the data to the job_seeker or employer table based on their role
@@ -143,7 +150,6 @@ class UserController extends Controller
                     'user_id' => $user->id,
                     'admin_name' => $user->name,
                     'email' => $user->email,
-                    'password' => $user->password,
                     // Add additional company-specific data here
                 ]);
                 break;
@@ -325,5 +331,45 @@ class UserController extends Controller
         return redirect()->back()->with('success','Password Updated Successfully');
 
             
+    }
+
+    public function updateProfileImage(Request $request)
+    {
+        $user = User::Find(Session::get('user')['id']);
+
+        $validator = Validator::make( $request->all(),[
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if($validator->passes()){
+
+             // Remove the existing profile image
+        if ($user->img_path) {
+            File::delete(storage_path('app/public/'.$user->img_path));
+        }
+            // Generate a unique filename for the profile image
+        $imageFileName = 'profile_image_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+
+        // Upload the new profile image
+        $imagePath = $request->file('image')->storeAs('images', $imageFileName, 'public');
+        
+        // Update profile image file path in the database
+        
+        $user->img_path = $imagePath;
+        $user->save();
+        session()->flash('success', 'Profile image updated successfully.');
+        return response()->json([
+            'status'=> true,
+            'errors'=> []
+        ]);
+        }
+        else{
+            return response()->json([
+                'status'=>false,
+                'errors'=> $validator->errors()
+            ]);
+        }
+
+        
     }
 }

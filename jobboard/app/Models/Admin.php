@@ -19,5 +19,7 @@ class Admin extends Model
         'email',
         'password',
         'admin_image',
+        'cnic',
+        'contact_no',
     ];
 }
