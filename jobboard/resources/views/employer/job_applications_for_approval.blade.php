@@ -37,7 +37,7 @@
                 <td>{{ $jobApplication->jobSeeker->name }}</td>
                 <td>{{ $jobApplication->jobSeeker->email }}</td>
                 <td><a class="btn btn-primary" href="{{ route('jobSeeker.detail', ['jobSeeker' => $jobApplication->jobSeeker]) }}"> View</a></td>
-                <td><a href="{{ asset('storage/' .$jobApplication->jobSeeker->cv_path) }}" class="btn btn-warning">ReviewCV</a></td>
+                <td><a href="{{ route('cv.showToEmployer', $jobApplication->id ) }}" class="btn btn-warning">ReviewCV</a></td>
                 <td>{{ $jobApplication->status }}</td>
                 <td>
                     @if ($jobApplication)

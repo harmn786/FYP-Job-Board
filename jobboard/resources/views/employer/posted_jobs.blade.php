@@ -5,7 +5,7 @@
 <div class="row">
     {{View::make('front.app.sidebar')}}
     <div class="col-lg-9">
-@if(session()->get('message'))
+@if(session()->get('success'))
 <div class="alert alert-success" role="alert">
   <strong>Success: </strong>{{session()->get('success')}}
 </div>

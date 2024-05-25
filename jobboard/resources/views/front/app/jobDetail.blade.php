@@ -38,13 +38,13 @@
                           <div class="single_jobs white-bg d-flex justify-content-between">
                               <div class="jobs_left d-flex align-items-center">
                                   <div class="jobs_conetent">
-                                          <h4 class="text-success">{{ $job->title }}</h4>
+                                          <h4 class="h4">{{ $job->title }} ( {{ $job->category->name }} )</h4>
                                       <div class="links_locat d-flex align-items-center">
                                           <div class="location">
                                               <p> <i class="fa fa-map-marker"></i>&nbsp;&nbsp;{{ $job->location }}</p>
                                           </div>
                                           <div class="location">
-                                              <p> &nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o"></i>&nbsp;&nbsp;{{ $job->type }}</p>
+                                              <p> &nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o"></i>&nbsp;&nbsp;{{ $job->jobType->name }}</p>
                                           </div>
                                       </div>
                                   </div>
@@ -65,11 +65,11 @@
                       <div class="descript_wrap white-bg">
                           <div class="single_wrap">
                               <h4>Job description</h4>
-                            <p>{{ $job->description }}</p>
+                            <p>{{ Str::words(strip_tags($job->description)) }}</p>
                           </div>
                           <div class="single_wrap">
                               <h4>Other Requirements</h4>
-                              <p>{{ $job->other_requirements }}</p>
+                              {{ strip_tags($job->other_requirements) }}
                           </div>
                           <div class="single_wrap">
                               <h4>Qualifications</h4>
@@ -81,7 +81,7 @@
                         </div>
                           <div class="single_wrap">
                               <h4>Benefits</h4>
-                              <p>{{ $job->other_benifits }}</p>
+                              <p>{{ Str::words(strip_tags($job->other_benifits)) }}</p>
                           </div>
                           <div class="border-bottom"></div>
                           <div class="pt-3 text-end">
@@ -105,7 +105,7 @@
                               </form>
 
                               @else
-                                  <a href="{{ route('userlogin') }}" class="btn btn-success float-start" >Login To Apply for Job</a>
+                                  <a href="{{ route('userlogin') }}" class="btn btn-success float-start" >Login To Apply</a>
                                   <a href="{{ route('home') }}" class="btn btn-primary" style="">Back to Job Listings</a>
                               @endif
                               {{-- <a href="#" class="btn btn-primary">Apply</a> --}}
@@ -118,7 +118,7 @@
                   <div class="card shadow border-0 p-3 ">
                       <div class="job_sumary">
                           <div class="summery_header pb-1 pt-4">
-                              <h4 class="text-success">Job Summery</h4>
+                              <h4 class="h4">Job Summery</h4>
                           </div>
                           <div class="border-bottom"></div>
                           <div class="job_content pt-3">
@@ -127,7 +127,7 @@
                                   <li>Vacancy: <span>{{ $job->vacancy }}</span></li>
                                   <li>Salary PKR: <span> {{ $job->salary }}</span></li>
                                   <li>Location: <span>{{ $job->location }}</span></li>
-                                  <li>Job Nature: <span> {{ $job->type }}</span></li>
+                                  <li>Job Nature: <span> {{ $job->jobType->name }}</span></li>
                               </ul>
                           </div>
                       </div>
@@ -135,7 +135,7 @@
                   <div class="card shadow border-0 my-4 p-3">
                       <div class="job_sumary">
                           <div class="summery_header pb-1 pt-4">
-                              <h4 class="text-success">Company Details</h4>
+                              <h4 class="h4">Company Details</h4>
                           </div>
                           <div class="border-bottom"></div>
                           <div class="job_content pt-3">

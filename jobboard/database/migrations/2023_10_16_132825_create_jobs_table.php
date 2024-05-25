@@ -16,13 +16,13 @@ return new class extends Migration
             $table->foreignId('employer_id')->constrained('employers')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('title');
             $table->string('location');
-            $table->string('type');
+            $table->foreignId('job_type_id')->constrained('job_types')->cascadeOnDelete()->cascadeOnUpdate();
             $table->text('education');
             $table->string('experience');
             $table->Integer('salary');
             $table->string('gender');
             $table->integer('vacancy');
-            $table->string('category');
+            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete()->cascadeOnUpdate();
             $table->date('application_deadline');
             $table->text('description');
             $table->text('other_requirements');

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->string('email');
+            $table->string('contact_no');
             $table->string('cnic')->nullable();
             $table->date('dob')->nullable();
             $table->string('title')->nullable();

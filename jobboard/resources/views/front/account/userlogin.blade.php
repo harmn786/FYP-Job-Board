@@ -17,7 +17,7 @@
   <form action="{{route('userlog')}}"  method="POST" class="mt-2">
     @csrf
     <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
+      <label for="email" class="form-label">Email<span class="text-danger fw-bold">*</span></label>
       <input name="email" value="{{old('email')}}" type="text" class="form-control @error('email') is-invalid  @enderror" id="email" placeholder="Enter Your Email">
       <span class="text-danger">
         @error('email')
@@ -25,9 +25,10 @@
         @enderror
     </span>
     </div>
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input name="password" value="{{old('password')}}" type="password" class="form-control @error('password') is-invalid  @enderror" id="email" placeholder="Enter Your Password">
+    <div class="mb-3 password-container">
+      <label for="password" class="form-label">Password<span class="text-danger fw-bold">*</span></label>
+      <input name="password" value="{{old('password')}}" type="password" class="form-control @error('password') is-invalid  @enderror" id="password" placeholder="Enter Your Password">
+      <i class=" fa fa-sold fa-eye" id="show-password"></i>
       <span class="text-danger">
         @error('password')
             {{$message}}
@@ -44,4 +45,16 @@
 </form>
 </div>
 </div>
+  @endsection
+  @section('customJs')
+  <script>
+    const showPassword = document.querySelector("#show-password");
+    const passwordField = document.querySelector("#password");
+    
+    showPassword.addEventListener("click",function(){
+      this.classList.toggle("fa-eye-slash");
+      const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+      passwordField.setAttribute("type",type);
+  });
+  </script>
   @endsection

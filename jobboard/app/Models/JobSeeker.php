@@ -13,6 +13,7 @@ class JobSeeker extends Model
         'user_id',
         'name',
         'email',
+        'contact_no',
         'education',
         'title',
         'cnic',
@@ -37,5 +38,11 @@ class JobSeeker extends Model
     {
         return $this->belongsToMany(Job::class, 'favorites');
     }
+    public function hasMandatoryFieldsFilled()
+{
+    // Check if all mandatory fields are filled
+    return !empty($this->name) && !empty($this->email) && !empty($this->cnic) && !empty($this->dob) && !empty($this->education) && !empty($this->experience) && !empty($this->address) && !empty($this->skills) && !empty($this->cv_path);
+}
+    
     
 }

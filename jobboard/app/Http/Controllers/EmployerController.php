@@ -19,8 +19,15 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\JobApplicantsExport;
 use App\Models\Admin;
 use App\Models\JobSeeker;
+use App\Models\Category;
+use App\Models\JobType;
+use Illuminate\Support\Facades\Log;
 use Exception;
 use ZipArchive;
+use League\Csv\Writer;
+use League\Csv\CannotInsertRecord;
+use Illuminate\Support\Facades\Response;
+
 
 class EmployerController extends Controller
 {
@@ -36,17 +43,23 @@ class EmployerController extends Controller
     {
         $user = auth()->user();
         $employer = $user->Employer;
+        $categories = Category::orderBy('name','ASC')->where('status',1)->get();
+        $job_types = JobType::orderBy('name','ASC')->where('status',1)->get();
+
         if($user->role == 'company'){
-            return view('employer.job_create');
+            return view('employer.job_create',['job_types' => $job_types,'categories' => $categories]);
         }
     }
     
     public function store(Request $request)
     {
+        $categories = Category::orderBy('name','ASC')->where('status',1)->get();
+        $job_types = JobType::orderBy('name','ASC')->where('status',1)->get();
+
         // Validate the form data
         $request->validate([
             'job_title' => 'required|string|max:255',
-            'job_type' => 'required|string',
+            'job_type' => 'required',
             'vacancy' => 'required|numeric',
             'salary' => 'required|numeric',
             'education' => 'required',
@@ -58,18 +71,18 @@ class EmployerController extends Controller
             'other_requirements' => 'required',
             'other_benifits' => 'required',
             'company_email' => 'required',
-            'job_category' => 'required',
+            'category' => 'required',
             
         ]);
         $user = auth()->user();
         $employer = $user->Employer;
         // Create a new job with status set to pending
-        if($employer->contact_no == Null && $employer->contact_person == Null && $employer->industry == Null){
-            return redirect()->route('jobs.create')->with('success', 'Please Complete Ypur Profile to Post a Job');
+        if(!$employer->hasMandatoryFieldsFilled()){
+            return redirect()->route('jobs.create')->with('success', 'Please Complete Your Profile to Post a Job',['job_types' => $job_types,'categories' => $categories]);
         }
         $job = $employer->jobs()->create([
             'title' => $request->input('job_title'),
-            'type' => $request->input('job_type'),
+            'job_type_id' => $request->input('job_type'),
             'vacancy' => $request->input('vacancy'),
             'salary' => $request->input('salary'),
             'education' => $request->input('education'),
@@ -82,7 +95,7 @@ class EmployerController extends Controller
             'other_benifits' => $request->input('other_benifits'),
             'company_name' => $request->input('company_name'),
             'company_email' => $request->input('company_email'),
-            'category' => $request->input('job_category'),
+            'category_id' => $request->input('category'),
             'employer_id' => $employer->id,
             'company_image' => $employer->img_path,
             'approved_by_admin' => false,
@@ -95,7 +108,7 @@ class EmployerController extends Controller
         ];
         Mail::to($employer->email)->send(new NotificationEmailToEmployerPostJob($mailData));
         Mail::to('devbyabdulrehman@gmail.com')->send(new NotificationEmailToAdminForApproveJob($mailData));
-        return redirect()->route('jobs.create')->with('success', 'Job posted successfully. Awaiting admin approval.');
+        return redirect()->route('jobs.create')->with('success', 'Job posted successfully. Awaiting admin approval.',['job_types' => $job_types,'categories' => $categories]);
 
     }
 
@@ -166,16 +179,6 @@ class EmployerController extends Controller
         
     }
 
-    // public function jobApplications()
-    // {
-    //     $user = auth()->user();
-    //     // Fetch job applications for the logged-in employer's jobs
-    //     $jobApplications = $user->Employer->jobs->flatMap->jobApplications;
-
-    //     return view('job_applications_for_approval', compact('jobApplications'));
-    // }
-
-
     // public function approveApplication(Request $request,JobApplication $jobApplication)
     // {
     //     // Check if the logged-in user is the employer associated with the job
@@ -215,8 +218,10 @@ class EmployerController extends Controller
 
     public function editJob(Request $request,Job $job)
     {
+        $categories = Category::orderBy('name','ASC')->where('status',1)->get();
+        $job_types = JobType::orderBy('name','ASC')->where('status',1)->get();
         // Show the form for editing the job details
-        return view('employer.update_job', compact('job'));
+        return view('employer.update_job', compact('job'),['job_types' => $job_types,'categories' => $categories]);
     }
 
     public function updateJob(Request $request, Job $job)
@@ -225,7 +230,7 @@ class EmployerController extends Controller
         $request->validate([
 
             'job_title' => 'required|string|max:255',
-            'job_type' => 'required|string',
+            'job_type' => 'required',
             'vacancy' => 'required|numeric',
             'salary' => 'required|numeric',
             'education' => 'required',
@@ -237,14 +242,14 @@ class EmployerController extends Controller
             'other_requirements' => 'required',
             'other_benifits' => 'required',
             'company_email' => 'required',
-            'job_category' => 'required',
+            'category' => 'required',
 
         ]);
 
         // Update the job details
         $job->update([
             'title' => $request->input('job_title'),
-            'type' => $request->input('job_type'),
+            'job_type_id' => $request->input('job_type'),
             'vacancy' => $request->input('vacancy'),
             'salary' => $request->input('salary'),
             'education' => $request->input('education'),
@@ -257,11 +262,11 @@ class EmployerController extends Controller
             'other_benifits' => $request->input('other_benifits'),
             'company_name' => $request->input('company_name'),
             'company_email' => $request->input('company_email'),
-            'category' => $request->input('job_category'),
+            'category_id' => $request->input('category'),
             'approved_by_admin' => false,
         ]);
 
-        return redirect()->route('employer.postedJobs')->with('success', 'Job details updated successfully.');
+        return redirect()->route('employer.editJob',$job)->with('success', 'Job details updated successfully.');
     }
 
     public function deleteJob(Request $request, Job $job)
@@ -279,6 +284,21 @@ class EmployerController extends Controller
 
         return view('employer.job_applications_for_approval', compact('job', 'jobApplications'));
     }
+    public function viewCVByEmployer($id)
+    {
+
+        $Application = JobApplication::where('id',$id)->first();
+        $pdfData = $Application->jobSeeker->cv_path;
+
+        // Set response headers
+        $headers = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline', // or 'attachment' to force download
+        ];
+
+        // Stream the PDF file content to the user's browser
+        return response($pdfData, 200, $headers);
+    }
 
     public function approveJobApplication(Request $request, $applicationId)
     {
@@ -294,50 +314,141 @@ class EmployerController extends Controller
 
         return redirect()->back()->with('success', 'Job application has been updated successfully.');
     }
-    
+
     public function downloadCVs($jobId)
     {
-        
-        // Get job applications related to the given job ID
+        // Get all job applications for the specific job
         $jobApplications = JobApplication::where('job_id', $jobId)->get();
+        
         // Create a temporary directory to store the CV files
-        $tempDir = storage_path('temp');
-        File::makeDirectory($tempDir);
-        // Add each job seeker's CV to the temporary directory
+        $tempDir = storage_path('app/temp_cvs');
+        File::makeDirectory($tempDir, 0755, true);
+        // Loop through each job application
         foreach ($jobApplications as $jobApplication) {
-            $cvPath = storage_path('app/public/' . $jobApplication->jobSeeker->cv_path);
-            $cvName = $jobApplication->jobSeeker->email . '_CV.pdf';
-            File::copy($cvPath, storage_path('temp/' . $cvName));
+            $jobSeeker = $jobApplication->jobSeeker;
+            $cvPath = $jobSeeker->cv_path;
+
+
+            // Get the job seeker name for the filename
+            $filename = $jobSeeker->cnic . '.pdf';
+            if ($cvPath === false) {
+                // Log or handle error
+                continue; // Skip to the next job application
+            }
+
+            // Save the CV file to the temporary directory
+            if (file_put_contents($tempDir . '/' . $filename, $cvPath) === false) {
+                // Log or handle error
+                continue; // Skip to the next job application
+            }
         }
-        // Create a zip file containing the CV files
-        $zipFilePath = storage_path('temp.zip');
+
+        // Create a zip archive of the CV files
+        $zipFilePath = storage_path('app/applicants_cvs.zip');
         $zip = new ZipArchive;
-        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
             $files = File::files($tempDir);
             foreach ($files as $file) {
                 $zip->addFile($file, basename($file));
             }
             $zip->close();
         }
-        // Clean up the temporary directory
-        File::deleteDirectory($tempDir);
-        // Download the zip file
-        try{
-            return response()->download($zipFilePath)->deleteFileAfterSend(true);
-        }
-        catch(Exception $e){
-            return redirect()->back()->with('error', 'No Applicants Founds');
-        }
-    }
 
+        // Delete the temporary directory
+        File::deleteDirectory($tempDir);
+
+        // Download the zip archive
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+    }
+    
+    // public function downloadCVs($jobId)
+    // {
+        
+    //     // Get job applications related to the given job ID
+    //     $jobApplications = JobApplication::where('job_id', $jobId)->get();
+    //     // Create a temporary directory to store the CV files
+    //     $tempDir = storage_path('temp');
+    //     File::makeDirectory($tempDir);
+    //     // Add each job seeker's CV to the temporary directory
+    //     foreach ($jobApplications as $jobApplication) {
+    //         $cvPath = storage_path('app/public/' . $jobApplication->jobSeeker->cv_path);
+    //         $cvName = $jobApplication->jobSeeker->email . '_CV.pdf';
+    //         File::copy($cvPath, storage_path('temp/' . $cvName));
+    //     }
+    //     // Create a zip file containing the CV files
+    //     $zipFilePath = storage_path('temp.zip');
+    //     $zip = new ZipArchive;
+    //     if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+    //         $files = File::files($tempDir);
+    //         foreach ($files as $file) {
+    //             $zip->addFile($file, basename($file));
+    //         }
+    //         $zip->close();
+    //     }
+    //     // Clean up the temporary directory
+    //     File::deleteDirectory($tempDir);
+    //     // Download the zip file
+    //     try{
+    //         return response()->download($zipFilePath)->deleteFileAfterSend(true);
+    //     }
+    //     catch(Exception $e){
+    //         return redirect()->back()->with('error', 'No Applicants Founds');
+    //     }
+    // }
+
+
+    // public function downloadApplicants($jobId)
+    // {
+    //     // Get job applications for the specified job
+    //     $jobApplications = JobApplication::where('job_id', $jobId)->get();
+
+    //     // Generate and download Excel sheet
+    //     return Excel::download(new JobApplicantsExport($jobApplications), 'applicants.xlsx');
+    // }
 
     public function downloadApplicants($jobId)
     {
-        // Get job applications for the specified job
+        // Get all job applications for the specific job
         $jobApplications = JobApplication::where('job_id', $jobId)->get();
 
-        // Generate and download Excel sheet
-        return Excel::download(new JobApplicantsExport($jobApplications), 'applicants.xlsx');
+        // Create a new CSV writer
+        $csv = Writer::createFromString('');
+
+        // Insert CSV headers
+        $csv->insertOne(['Job Seeker Name', 'Email', 'Phone', 'CNIC', 'DOB', 'Address', 'Education', 'Experience', 'Skills', 'Application Date']);
+
+        // Insert job application data
+        foreach ($jobApplications as $jobApplication) {
+            $jobSeeker = $jobApplication->jobSeeker;
+            $data = [
+                $jobSeeker->name,
+                $jobSeeker->email,
+                $jobSeeker->contact_no,
+                $jobSeeker->cnic,
+                $jobSeeker->dob,
+                $jobSeeker->address,
+                $jobSeeker->education,
+                $jobSeeker->experience,
+                $jobSeeker->skills,
+                $jobApplication->application_date,
+            ];
+
+            try {
+                $csv->insertOne($data);
+            } catch (CannotInsertRecord $e) {
+                // Handle insertion error
+                return back()->with('error', 'Failed to insert record to CSV');
+            }
+        }
+
+        // Set CSV response headers
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="applicants.csv"',
+        ];
+
+        // Output the CSV content to the browser
+        return response($csv, 200, $headers);
     }
 
     public function jobSeekerDetail(Request $request,JobSeeker $jobSeeker)

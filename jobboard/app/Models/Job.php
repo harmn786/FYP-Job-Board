@@ -20,7 +20,7 @@ class Job extends Model
     }
     protected $fillable = [
         'title',
-        'type',
+        'job_type_id',
         'vacancy',
         'salary',
         'education',
@@ -33,7 +33,7 @@ class Job extends Model
         'other_benifits',
         'company_name',
         'company_email',
-        'category',
+        'category_id',
         'featured',
         'company_image',
         'employer_id',
@@ -44,5 +44,13 @@ class Job extends Model
     public function favorite()
     {
         return $this->belongsTo(Favorite::class);
+    }
+    public function jobType()
+    {
+        return $this->belongsTo(JobType::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

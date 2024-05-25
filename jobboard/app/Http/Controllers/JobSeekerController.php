@@ -16,6 +16,7 @@ use App\Models\Employer;
 use App\Models\Job;
 use App\Models\JobApplication;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Session;
 
 class JobSeekerController extends Controller
@@ -37,6 +38,11 @@ class JobSeekerController extends Controller
         $request->validate([
             'education'=>'required',
             'experience'=>'required',
+            'cnic' => 'required',
+            'dob' => 'required',
+            'address' => 'required',
+            'skills' => 'required',
+            'contact_no' => 'required',
             // Add other fields as needed
         ]);
 
@@ -44,6 +50,7 @@ class JobSeekerController extends Controller
         $update = $jobSeeker->update([
             'name' => $user->name,
             'email' => $user->email,
+            'contact_no' => $request->input('contact_no'),
             'title' => $request->input('title'),
             'cnic' => $request->input('cnic'),
             'dob' => $request->input('dob'),
@@ -60,31 +67,82 @@ class JobSeekerController extends Controller
         return redirect()->route('editJobSeeker')->with('success', 'Profile details updated successfully.');
     }
 
-    public function updateCV(Request $request)
-    {
-        $user = auth()->user();
-        $jobSeeker = $user->jobSeeker;
+    // public function updateCV(Request $request)
+    // {
+    //     $user = auth()->user();
+    //     $jobSeeker = $user->jobSeeker;
 
+    //     $request->validate([
+    //         'cv' => 'required|mimes:pdf|max:2048', // Assuming PDF file format for CV
+    //     ]);
+
+    //     // Remove the existing CV file
+    //     if ($jobSeeker->cv_path) {
+    //         Storage::disk('public')->delete($jobSeeker->cv_path);
+    //     }
+
+    //     // Generate a unique filename for the CV
+    //     $cvFileName = 'cv_' . uniqid() . '.' . $request->file('cv')->getClientOriginalExtension();
+
+    //     // Upload the new CV
+    //     $cvPath = $request->file('cv')->storeAs('cv', $cvFileName, 'public');
+        
+    //     // Update CV file path in the database
+    //     $jobSeeker->update(['cv_path' => $cvPath]);
+
+    //     return redirect()->route('editJobSeeker')->with('success', 'CV updated successfully.');
+    // }
+
+    public function updateCv(Request $request)
+    {
+        // Validate the uploaded file
         $request->validate([
-            'cv' => 'required|mimes:pdf|max:2048', // Assuming PDF file format for CV
+            'cv' => 'required|file|mimes:pdf|max:2048', // Assuming maximum file size is 2MB
         ]);
 
-        // Remove the existing CV file
-        if ($jobSeeker->cv_path) {
-            Storage::disk('public')->delete($jobSeeker->cv_path);
-        }
+        // Get the uploaded file
+        $cvFile = $request->file('cv');
 
-        // Generate a unique filename for the CV
-        $cvFileName = 'cv_' . uniqid() . '.' . $request->file('cv')->getClientOriginalExtension();
+        // Read the file content
+        $fileData = file_get_contents($cvFile->getRealPath());
 
-        // Upload the new CV
-        $cvPath = $request->file('cv')->storeAs('cv', $cvFileName, 'public');
-        
-        // Update CV file path in the database
-        $jobSeeker->update(['cv_path' => $cvPath]);
+        // Get the authenticated job seeker
+        $jobSeeker = auth()->user()->jobSeeker;
 
-        return redirect()->route('editJobSeeker')->with('success', 'CV updated successfully.');
+        // Update the cv_path column with the file data
+        $jobSeeker->update(['cv_path' => $fileData]);
+
+        // Redirect back with success message
+        return back()->with('success', 'CV uploaded successfully!');
     }
+
+    // public function viewCV()
+    // {
+    //     $user = auth()->user();
+    //     $pdfFile = $user->jobSeeker->cv_path;
+         
+
+    //     return response()->streamDownload(function () use ($pdfFile) {
+    //         echo $pdfFile;
+    //     });
+    // }
+    
+    public function viewCV()
+    {
+        $user = auth()->user();
+        $pdfData = $user->jobSeeker->cv_path;
+
+        // Set response headers
+        $headers = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline', // or 'attachment' to force download
+        ];
+
+        // Stream the PDF file content to the user's browser
+        return response($pdfData, 200, $headers);
+    }
+
+   
 
     public function updateProfileImage(Request $request)
     {
@@ -137,37 +195,40 @@ class JobSeekerController extends Controller
             'job' => $job,
         ];
         if(!Session::has('user')){
-            return redirect()->route('jobs.show', $jobId)->with('error', 'Please Sign In First to add Job to Apply For Job!');
+            return redirect()->route('jobs.jobDetail', $jobId)->with('error', 'Please Sign In First to add Job to Apply For Job!');
         }
 
-        if (!$jobSeeker->cv_path) {
-            return redirect()->back()->with('error', 'Please upload a CV and complete profile in profile section before applying for jobs.');
+        if (!$jobSeeker->hasMandatoryFieldsFilled()) {
+            return redirect()->route('editJobSeeker',compact('jobSeeker') )->with('error', 'Please upload a CV and complete profile in profile section before applying for jobs.');
+        }
+        else{
+            if (!$jobSeeker->jobApplications()->where('job_id', $jobId)->exists()) {
+                $jobSeeker->jobApplications()->create([
+                    'job_id' => $jobId,
+                    'job_seeker_id'=>$jobSeeker->id,
+                    'application_date'=>now(),
+                    'updated_at'=>now(),
+                    'created_at'=>now(),
+                ]);
+                Mail::to($employer->email)->send(new JobNotificationEmailToEmployer($mailData));
+                Mail::to($jobSeeker->email)->send(new JobNotificationEmailToJobSeeker($mailData));
+                return redirect()->route('jobs.jobDetail', $jobId)->with('success', 'Job application submitted!');
+            }
+            else{
+                return redirect()->route('jobs.jobDetail', $jobId)->with('error', 'Job is Already Applied');
+            }
         }
         // Assuming authentication logic to get the logged-in user
         // Check if the job is already applied
-        if (!$jobSeeker->jobApplications()->where('job_id', $jobId)->exists()) {
-            $jobSeeker->jobApplications()->create([
-                'job_id' => $jobId,
-                'job_seeker_id'=>$jobSeeker->id,
-                'application_date'=>now(),
-                'updated_at'=>now(),
-                'created_at'=>now(),
-            ]);
-        }
-        else{
-            return redirect()->route('jobs.show', $jobId)->with('error', 'Job is Already Applied');
-        }
+        
         // Mail::to($employer->email,$jobSeeker->email)->send(new JobNotificationEmailToEmployer($mailData),new JobNotificationEmailToJobSeeker($mailData));
-        Mail::to($employer->email)->send(new JobNotificationEmailToEmployer($mailData));
-        Mail::to($jobSeeker->email)->send(new JobNotificationEmailToJobSeeker($mailData));
-        return redirect()->route('jobs.show', $jobId)->with('success', 'Job application submitted!');
     }
 
     public function addToFavorites($jobId)
     {
         // Assuming authentication logic to get the logged-in user
         if(!Session::has('user')){
-            return redirect()->route('jobs.show', $jobId)->with('error', 'Please Sign In First to add Job to Favorite!');
+            return redirect()->route('jobs.jobDetail', $jobId)->with('error', 'Please Sign In First to add Job to Favorite!');
         }
             $jobSeeker = auth()->user()->jobSeeker;
             if (!$jobSeeker->favorites()->where('job_id', $jobId)->exists()) {
@@ -175,11 +236,11 @@ class JobSeekerController extends Controller
                 $jobSeeker->favorites()->attach($jobId);
             }
             else{
-                return redirect()->route('jobs.show', $jobId)->with('error', 'Job is Already Favorited!');
+                return redirect()->route('jobs.jobDetail', $jobId)->with('error', 'Job is Already Favorited!');
             }
         // Check if the job is already in favorites
 
-        return redirect()->route('jobs.show', $jobId)->with('success', 'Job added to favorites!');
+        return redirect()->route('jobs.jobDetail', $jobId)->with('success', 'Job added to favorites!');
     }
     public function favorite_jobs()
     {

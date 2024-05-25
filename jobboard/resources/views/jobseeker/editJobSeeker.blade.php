@@ -38,6 +38,15 @@
               @enderror
           </span>
           </div>
+          <div class="col-md-6  mb-3">
+            <label for="contact_no" class="form-label">Enter Your Contact_No</label>
+            <input type="text"   value="{{old('contact_no',$jobSeeker->contact_no)}}" id="contact_no" class="form-control @error('contact_no') is-invalid  @enderror" name="contact_no" placeholder="Enter Your Contact_No">
+            <span class="text-danger">
+              @error('contact_no')
+                  {{$message}}
+              @enderror
+          </span>
+          </div>
           
           <div class="col-md-6  mb-3">
             <label for="education" class="form-label">Enter Your education</label>
@@ -93,7 +102,7 @@
               @enderror
           </span>
           </div>
-          <div class="mb-3">
+          <div class="col-md-6 mb-3">
             <label for="skills" class="form-label">Enter Your Skills</label>
             <input type="text" value="{{old('skills',$jobSeeker->skills)}}" id="skills" class="form-control @error('skills') is-invalid  @enderror" name="skills" placeholder="Enter Your skills">
             <span class="text-danger">
@@ -153,7 +162,9 @@
       <Button type="submit" class="btn btn-success" name="submit">Update</Button>
       @if($jobSeeker->cv_path)
       <p class="text-success">CV is already uploaded</p>
-      <a href="{{ asset('storage/' . $jobSeeker->cv_path) }}" target="_blank">Click To Download CV File</a>
+
+      
+      <a href="{{ route('cv.show') }}">Click To Download CV File</a>
     @endif
   </form>
   </div>

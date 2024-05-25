@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/ui/trumbowyg.min.css" />
     <title>Job-Board</title>
 </head>
-<body>
+<body onload="typeWriter();">
     {{View::make('front.app.header')}}
     @yield('content')
     {{-- JobSeeker Model --}}
@@ -113,6 +113,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/trumbowyg.min.js" ></script>
     @yield('customJs')
     <script>
+      $('.textarea').trumbowyg();
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -144,8 +145,7 @@
                 }
             });
         });
-
-        $('.textarea').trumbowyg();
+        
         // $(document).ready(function(){
         //     $('.selectpicker select').selectpicker();
         // });
@@ -154,5 +154,7 @@
         });
 
     </script>
+    
+      
 </body>
 </html>

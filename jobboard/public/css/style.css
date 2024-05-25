@@ -9,14 +9,15 @@ html{
           min-height:100%;
           display: flex;
           flex-direction: column;
+          font-family: popins;
    }
       .wraper{
           display: flex;
           justify-content: center;
           flex-direction: column; 
-          height: 500px;
+          height: 550px;
   
-          background: linear-gradient(180deg,rgba(26, 25, 25, 0.8), rgba(56, 54, 54, 0.2)),url(../images/banner5.jpg);
+          background: linear-gradient(360deg,rgba(33, 33, 94, 0.701), rgba(104, 66, 181, 0.267)),url(../images/banner6.jpeg);
           background-size: cover;
           background-repeat: no-repeat;
           background-position: center;
@@ -36,11 +37,11 @@ html{
   }
   .list-group-item > a{
       text-decoration: none;
-      color: #1D976C;
+      color: #00008b;
   }
   .list-group-item > a:hover{
       text-decoration: none;
-      color: #0f5039;
+      color: #0808ce;
   }
   .list-group-item > a:active{
       text-decoration: none;
@@ -62,7 +63,7 @@ html{
     content: "";
     position: absolute;
     /* background-color: #A8DF8E; */
-    background-image: linear-gradient(to right, #1D976C 0%, #93F9B9  51%, #1D976C  100%);
+    background-color: #00008b;
     width: 70px;
     height: 4px;
     bottom: 0px;
@@ -70,8 +71,17 @@ html{
   }
   h2 {
     font-size: 30px;
+    font-weight: bolder;
     position: relative;
     color: #414042;
+  }
+  h1{
+    font-weight: bolder;
+    position: relative;
+    color: #414042;
+  }
+  .h4{
+    color: #00008b;
   }
   h1, h2, h3, h4, h5, h6 {
     margin: 0;
@@ -79,14 +89,12 @@ html{
     padding: 0px 0 20px;
     font-family: 'Inter-Bold';
   }
-      .hero{
-          background: linear-gradient(180deg,rgba(26, 25, 25, 0.8), rgba(56, 54, 54, 0.2)),url('../images/banner5.jpg');
-          background-size: cover;
-          background-repeat: no-repeat;
-          background-position: center;
-          width: 100vw;
-          /* margin-top: -50px; */
-      }
+  .logo > i{
+    color: #00008b;
+    font-weight: 600;
+    font-size: 1.25rem;
+    font-family: samsun;
+  }
       .customize-form{
           max-width: 400px;
           margin: 40px auto;
@@ -119,77 +127,96 @@ html{
   
           font-size: 66px;
           font-weight: 600;
+          line-height: 0.75em;
       }
       .hero-sub-heading{
-  
       font-size: 20px;
-      font-weight: 600;
-      }
+      font-weight: 400;
+    }
       footer{
           margin-top:auto;
+      }
+      .bg-home{
+        background-color: #00008b;
       }
       .choice{
           padding-top: 20px;
       }
       button.btn.btn-success,  a.btn.btn-success{
-          background-image: linear-gradient(to right, #1D976C 0%, #93F9B9  51%, #1D976C  100%);
+          background-color: #00008b;
               padding: 8px 20px;
               text-align: center;
-              text-transform: uppercase;
               transition: 0.5s;
               background-size: 200% auto;
               color: white;            
-              box-shadow: 0 0 20px #e3d7d7;
               border-radius: 8px;
               border:none;
       }
       button.btn.btn-success:hover, a.btn.btn-success:hover{
+
               background-position: right center; /* change the direction of the change here */
               color: #fff;
+              background-color: #0808ce;
               text-decoration: none;
       }
       button.btn.btn-outline-success,  a.btn.btn-outline-success{
         background-color: #ffffff;
-            padding: 8px 20px;
+            padding: 6px 12px;
             text-align: center;
-            text-transform: uppercase;
             transition: 0.5s;
             background-size: 200% auto;
-            color: #1D976C !important;            
-            box-shadow: 0 0 20px #e3d7d7;
+            color: #00008b !important;            
+
             border-radius: 8px;
-            border: 1px solid #1D976C;
+            border: 2px solid #00008b;
     }
     button.btn.btn-outline-success:hover, a.btn.btn-outline-success:hover{
-            background-image: linear-gradient(to right, #1D976C 0%, #93F9B9  51%, #1D976C  100%);
+            background-color: #00008b;
             background-position: right center; /*change the direction of the change here*/
             text-decoration: none;
+            box-shadow: 0 0 20px #a7a2a2;
             color: #ffffff !important;
     }
+    button.btn.btn-outline-success-hero,  a.btn.btn-outline-success-hero{
+          padding: 6px 12px;
+          text-align: center;
+          transition: 0.5s;
+          background-size: 200% auto;
+          color: #ffffff !important;            
+          opacity: 0.7;
+          font-weight: 500;
+          border-radius: 8px;
+          border: 2px solid #ffffff;
+  }
+    button.btn.btn-outline-success-hero:hover, a.btn.btn-outline-success-hero:hover{
+      background-color: #00008b;
+      background-position: right center; /*change the direction of the change here*/
+      text-decoration: none;
+      color: #ffffff !important;
+      opacity: 1;
+}
   
       button.btn.btn-brimary,  a.btn.btn-primary{
-              background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA  51%, #1FA2FF  100%);
+              background-color: #156cab;
               padding: 8px 20px;
               text-align: center;
-              text-transform: uppercase;
               transition: 0.5s;
               background-size: 200% auto;
               color: white;            
-              box-shadow: 0 0 20px #e3d7d7;
               border-radius: 8px;
               border:none;
       }
       button.btn.btn-primary:hover, a.btn.btn-primary:hover{
-              background-position: right center; /* change the direction of the change here */
+        /* change the direction of the change here */
               color: #fff;
+              background-color: #2b98e6;
               text-decoration: none;
       }
   
       button.btn.btn-warning,  a.btn.btn-warning{
-              background-image: linear-gradient(to right, #FF8008 0%, #FFC837  51%, #FF8008  100%);
+              background-color: #FF8008;
               padding: 8px 20px;
               text-align: center;
-              text-transform: uppercase;
               transition: 0.5s;
               background-size: 200% auto;
               color: white;            
@@ -198,16 +225,15 @@ html{
               border:none;
       }
       button.btn.btn-warning:hover, a.btn.btn-warning:hover{
-              background-position: right center; /* change the direction of the change here */
+              background-color: #fc8b22; /* change the direction of the change here */
               color: #fff;
               text-decoration: none;
       }
   
       button.btn.btn-danger,  a.btn.btn-danger{
-          background-image: linear-gradient(to right, #e52d27 0%, #b31217  51%, #e52d27  100%);
+          background-color: #b31217;
               padding: 8px 20px;
               text-align: center;
-              text-transform: uppercase;
               transition: 0.5s;
               background-size: 200% auto;
               color: white;            
@@ -216,16 +242,16 @@ html{
               border:none;
       }
       button.btn.btn-danger:hover, a.btn.btn-danger:hover{
-              background-position: right center; /* change the direction of the change here */
+              background-color: #e52d27; /* change the direction of the change here */
               color: #fff;
               text-decoration: none;
       }
       i.fa.fa-heart-o{
-        color: #1D976C !important;
+        color: #00008b !important;
         background: none;
       }
       .favorite-job{
-        background-color: #48cc9e !important;
+        background-color: #0909df !important;
         color: #ffffff !important;
         scale: 1.5;
         padding: 2px;
@@ -247,7 +273,7 @@ html{
         padding: 10px 40px 10px 15px;
       }
     .dropdown-menu .dropdown-item:hover {
-      background-image: linear-gradient(to right, #1D976C 0%, #93F9B9  51%, #1D976C  100%);
+      background-color: #00008b;
         color: #ffffff;
       }
     .dropdown-menu .dropdown-item:hover i {
@@ -261,14 +287,22 @@ html{
         padding-right: 10px;
       }
       i.fa.fa-heart-o:hover{
-        background-color: #48cc9e;
+        background-color: #0808ce;
         color: #ffffff !important;
         scale: 1.5;
         padding: 2px;
         border-radius: 2px;
       }
-  
-           
+
+      .password-container{
+        position: relative;
+      }
+      .fa-eye{
+        position: absolute;
+        top: 60%;
+        right: 5%;
+        cursor: pointer;
+      }
       @media(max-width:768px){
           .job-summery{
               padding-top: 20px;
@@ -279,6 +313,12 @@ html{
           a.nav-link.btn.btn-outline-success{
           margin-bottom: 5px;
       }
+      .hero-heading{
+  
+        font-size: 54px;
+        font-weight: 400;
+        line-height: 0.75em;
+    }
       }
       h5.card-title{
           margin-bottom: 0 !important;
@@ -286,4 +326,7 @@ html{
   
       div.border-bottom{
           margin-bottom: 5px !important;
+      }
+      .text-home{
+        color: #00008b;
       }

@@ -13,7 +13,7 @@
   <form action="{{ route('forgetPasswordPost')}}"  method="POST">
     @csrf
     <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
+      <label for="email" class="form-label">Email<span class="text-danger fw-bold">*</span></label>
       <input name="email" value="{{old('email')}}" type="text" class="form-control @error('email') is-invalid  @enderror" id="email" placeholder="Enter Your Email">
       <span class="text-danger">
         @error('email')

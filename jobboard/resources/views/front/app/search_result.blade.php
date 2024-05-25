@@ -5,37 +5,45 @@
 @section('content')
     <div class="container">
         <h2>Job Search</h2>
-
-        {{-- Search Form --}}
-        <form method="get" action="{{ route('jobs.index') }}">
-        {{-- Job Results --}}
-        @if(count($jobs) > 0)
-        <div class="table-responsive">
-            <table class="table table-striped mt-4  border-0 rounded w-100 ml-auto mr-auto shadow">
-                <thead>
-                    <tr class="text-white bg-dark">
-                        <th>Job Title</th>
-                        <th>Category</th>
-                        <th>Location</th>
-                        <th>View Detail</th>
-                        {{-- Add other job details as needed --}}
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($jobs as $job)
-                        <tr>
-                            <td>{{ $job->title }}</td>
-                            <td>{{ $job->category }}</td>
-                            <td>{{ $job->location }}</td>
-                            <td><a class="btn btn-primary" href="{{ route('jobs.jobDetail', $job->id) }}">View Details</a></td>
-                            {{-- Add other job details as needed --}}
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="col-md-8 col-lg-9 ">
+            <div class="row">
+                @if (count($jobs)>0)
+            @foreach($jobs as $job)
+            <div class="col-md-4 mt-4">
+                <div class="card border-0 p-3 shadow mb-4">
+                    <div class="card-body">
+                        <h3 class="border-0 fs-5 pb-2 mb-0">{{ $job->title }}</h3>
+                        <p>{{ Str::words(strip_tags($job->description), $words=5, '...') }}</p>
+                        <div class="bg-light p-3 border">
+                            <p class="mb-0">
+                                <span class="fw-bolder"><i class="fa fa-map-marker"></i></span>
+                                <span class="ps-1">{{ $job->location }}</span>
+                            </p>
+                            <p class="mb-0">
+                                <span class="fw-bolder"><i class="fa fa-clock-o"></i></span>
+                                <span class="ps-1">{{ $job->jobType->name }}</span>
+                            </p>
+                            <p class="mb-0">
+                                <span class="fw-bolder"><i class="fa fa-usd"></i></span>
+                                <span class="ps-1">${{ $job->salary }}</span>
+                            </p>
+                        </div>
+            
+                        <div class="d-grid mt-3">
+                            <a href="{{ route('jobs.jobDetail', $job->id) }}" class="btn btn-success btn-lg">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                @endforeach
+                
+                <div>
+                    {{$jobs->links()}}
+                </div>
+                @else
+                <p>Jobs Not Found</p>
+                @endif
+            </div>
         </div>
-        @else
-            <p>No jobs found.</p>
-        @endif
     </div>
 @endsection

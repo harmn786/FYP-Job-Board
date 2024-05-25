@@ -24,4 +24,10 @@ class Employer extends Model
         'contact_number',
     ];
     public $timestamps = false;
+
+    public function hasMandatoryFieldsFilled()
+    {
+        // Check if all mandatory fields are filled
+        return !empty($this->contact_number) && !empty($this->contact_person) && !empty($this->industry);
+    }
 }

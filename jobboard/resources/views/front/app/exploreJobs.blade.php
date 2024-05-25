@@ -36,7 +36,7 @@
                     @if ($categories)
                         <option value="">Select Category</option>
                     @foreach ( $categories as $category )
-                        <option {{ (Request::get('category') == $category) ? 'selected' : '' }} value="{{ $category }}">{{ $category }}</option>
+                        <option {{ (Request::get('category') == $category->id) ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
                     @endif
                 </select>
@@ -44,11 +44,11 @@
 
             <div class="mb-4">
                 <h3>Job Type</h3>
-                @if ($types)
-                @foreach ($types as $type)
+                @if ($job_types)
+                @foreach ($job_types as $type)
                 <div class="form-check mb-2"> 
-                    <input class="form-check-input " {{ (in_array($type,$jobTypeArray)) ? 'checked' : '' }} name="job_type" type="checkbox" value="{{ $type }}" id="job-type-{{ $type }}">    
-                    <label class="form-check-label " for="job-type-{{ $type }}">{{ $type }}</label>
+                    <input class="form-check-input " {{ (in_array($type->id,$jobTypeArray)) ? 'checked' : '' }} name="job_type" type="checkbox" value="{{ $type->id }}" id="job-type-{{ $type->id }}">    
+                    <label class="form-check-label " for="job-type-{{ $type->id }}">{{ $type->name }}</label>
                 </div>
                 @endforeach
                     
@@ -82,22 +82,32 @@
 <div class="col-md-8 col-lg-9 ">
     <div class="row">
     @foreach($jobs as $job)
-    <div class="col-lg-4 mb-4">
-        <div class="card  shadow">
+    <div class="col-md-4">
+        <div class="card border-0 p-3 shadow mb-4">
             <div class="card-body">
-            <h5 class="card-title">{{ $job->title }}</h5>
-            <div class="border-bottom" style="border-color:green; "></div>
-            <p class="card-text">Salary: ${{ $job->salary }}</p>
-            <p class="card-text">Type: {{ $job->type }}</p>
-            <p class="card-text">Location: {{ $job->location }}</p>
-            <p class="card-text">Posted by: {{ $job->employer->name }}</p>
-            <p class="card-text">Application Deadline: {{\Carbon\Carbon::parse( $job->application_deadline)->format('d M, Y') }}</p>
-            <div class="border-bottom my-2"></div>
-            <a href="{{ route('jobs.jobDetail', $job->id) }}" class="btn btn-success">View Details</a>
-                {{-- Add other job details as needed --}}
+                <h3 class="border-0 fs-5 pb-2 mb-0">{{ $job->title }}</h3>
+                <p>{{ Str::words(strip_tags($job->description), $words=5, '...') }}</p>
+                <div class="bg-light p-3 border">
+                    <p class="mb-0">
+                        <span class="fw-bolder"><i class="fa fa-map-marker"></i></span>
+                        <span class="ps-1">{{ $job->location }}</span>
+                    </p>
+                    <p class="mb-0">
+                        <span class="fw-bolder"><i class="fa fa-clock-o"></i></span>
+                        <span class="ps-1">{{ $job->jobType->name }}</span>
+                    </p>
+                    <p class="mb-0">
+                        <span class="fw-bolder"><i class="fa fa-usd"></i></span>
+                        <span class="ps-1">${{ $job->salary }}</span>
+                    </p>
+                </div>
+    
+                <div class="d-grid mt-3">
+                    <a href="{{ route('jobs.jobDetail', $job->id) }}" class="btn btn-success btn-lg">Details</a>
+                </div>
             </div>
         </div>
-        </div>
+    </div>
         @endforeach
         <div>
             {{$jobs->links()}}

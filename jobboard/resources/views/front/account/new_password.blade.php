@@ -14,7 +14,7 @@
     <input type="text" name="token" hidden value="{{$token}}">
 
     <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
+      <label for="email" class="form-label">Email<span class="text-danger fw-bold">*</span></label>
       <input name="email" value="{{old('email')}}" type="text" class="form-control @error('email') is-invalid  @enderror" id="email" placeholder="Enter Your Email">
       <span class="text-danger">
         @error('email')
@@ -23,7 +23,7 @@
     </span>
     </div>
     <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
+      <label for="password" class="form-label">Password<span class="text-danger fw-bold">*</span></label>
       <input name="password" value="{{old('password')}}" type="password" class="form-control @error('password') is-invalid  @enderror" id="email" placeholder="Enter Your Password">
       <span class="text-danger">
         @error('password')

@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Session;
-
+use App\Models\Category;
+use App\Models\JobType;
 class JobController extends Controller
 {
     // function index(){
@@ -15,16 +16,22 @@ class JobController extends Controller
     // }
     public function index()
     {
+        $categories = Category::orderBy('name','ASC')->where('status',1)->get();
         // $jobs = Job::with('employer')->where('approved_by_admin', true)->paginate(8);
         $jobs = Job::where('approved_by_admin', true)->whereDate('application_deadline', '>=', Carbon::now()->toDateString())->orderby('created_at','DESC')
-        ->limit(4)->get();
-        $featured_jobs = Job::with('employer')->where('featured', true)->orderby('created_at','DESC')->limit(4)->get();
-        return view('front.app.index', compact('featured_jobs','jobs'));
+        ->limit(3)->get();
+        $featured_jobs = Job::with('employer')->where('featured', true)->orderby('created_at','DESC')->limit(3)->get();
+        return view('front.app.index',['categories' => $categories], compact('featured_jobs','jobs'));
+    }
+    public function categories()
+    {
+        $categories = Category::orderBy('name','ASC')->where('status',1)->paginate(8);
+        return view('front.app.categories',['categories' => $categories]);
     }
 
     public function exploreJobs(Request $request){
-        $categories = Job::distinct()->pluck('category');
-        $types = Job::distinct()->pluck('type');
+        $categories = Category::orderBy('name','ASC')->where('status',1)->get();
+        $job_types = JobType::orderBy('name','ASC')->where('status',1)->get();
         $jobs = Job::query();
 
         // Check if the request contains a job title filter
@@ -34,7 +41,7 @@ class JobController extends Controller
 
         // Check if the request contains a category filter
         if ($request->has('category')) {
-            $jobs->where('category', 'like', '%' . $request->input('category') . '%');
+            $jobs->where('category_id', 'like', '%' . $request->input('category') . '%');
         }
 
         // Check if the request contains a location filter
@@ -45,7 +52,7 @@ class JobController extends Controller
          // Check if the request contains a Job_Type filter
          if ($request->has('job_type')) {
             $jobtypeArray = explode(',', $request->job_type);
-            $jobs->whereIn('type',$jobtypeArray);
+            $jobs->whereIn('job_type_id',$jobtypeArray);
         }
 
         // Check if the request contains a Experience filter
@@ -67,7 +74,7 @@ class JobController extends Controller
        
         // $jobs =  Job::whereDate('application_deadline', '>=', Carbon::now()->toDateString())->orderby('created_at','DESC')
         // ->paginate(8);
-        return view('front.app.exploreJobs', ['jobs'=>$jobs,'categories' => $categories,'types'=>$types, 'jobTypeArray'=>$jobtypeArray]);
+        return view('front.app.exploreJobs', ['jobs'=>$jobs,'categories' => $categories,'job_types'=>$job_types, 'jobTypeArray'=>$jobtypeArray]);
     }
 
 
@@ -91,7 +98,7 @@ class JobController extends Controller
 
         // Check if the request contains a category filter
         if ($request->has('category')) {
-            $jobs->where('category', 'like', '%' . $request->input('category') . '%');
+            $jobs->where('category_id', 'like', '%' . $request->input('category') . '%');
         }
 
         // Check if the request contains a location filter
@@ -99,11 +106,17 @@ class JobController extends Controller
             $jobs->where('location', 'like', '%' . $request->input('location') . '%');
         }
 
-        $jobs = $jobs->get();
+        $jobs = $jobs->paginate(6);
 
         return view('front.app.search_result', compact('jobs'));
     }
 
+    public function jobsByCategory($id){
+
+        $jobs = Job::where('category_id',$id)->paginate(6);
+
+        return view('front.app.search_result', compact('jobs'));
+    }
     
 
 }

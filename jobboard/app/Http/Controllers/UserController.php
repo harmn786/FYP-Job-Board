@@ -145,6 +145,7 @@ class UserController extends Controller
                     'email' => $user->email,
                     // Add additional company-specific data here
                 ]);
+                break;
             case 'admin':
                 Admin::create([
                     'user_id' => $user->id,
@@ -217,7 +218,7 @@ class UserController extends Controller
         if(Auth::attempt($req->only('email','password'))){
             $user = auth()->user();
             $req->session()->put('user',$user);
-            return redirect()->route('home')->with('success','SignIn Successfully');
+            return redirect()->route('dashboard')->with('success','Please update your profile credentials if you have not updated yet ');
         }
         else{
             return redirect()->route('userlogin')->with('error','Invalid Crediantials');
@@ -334,42 +335,101 @@ class UserController extends Controller
     }
 
     public function updateProfileImage(Request $request)
-    {
-        $user = User::Find(Session::get('user')['id']);
+{
+    // Validate the uploaded image
+    $validator = Validator::make( $request->all(),[
+                'image' => 'required|image|mimes:jpeg|max:2048',
+            ]);
+    // Get the uploaded image
+    $image = $request->file('image');
 
-        $validator = Validator::make( $request->all(),[
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+    // Read the image file content and encode it as base64
+    $imageData = base64_encode(file_get_contents($image->getRealPath()));
 
-        if($validator->passes()){
+    // Get the authenticated user
+    $user = auth()->user();
 
-             // Remove the existing profile image
-        if ($user->img_path) {
-            File::delete(storage_path('app/public/'.$user->img_path));
-        }
-            // Generate a unique filename for the profile image
-        $imageFileName = 'profile_image_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-
-        // Upload the new profile image
-        $imagePath = $request->file('image')->storeAs('images', $imageFileName, 'public');
-        
-        // Update profile image file path in the database
-        
-        $user->img_path = $imagePath;
-        $user->save();
+    // Update the img column with the image data
+    // Redirect back with success message or return JSON response
+    if($validator->passes()){
+        $user->update(['img_path' => $imageData]);
         session()->flash('success', 'Profile image updated successfully.');
-        return response()->json([
-            'status'=> true,
-            'errors'=> []
-        ]);
-        }
+            return response()->json([
+                'status'=> true,
+                'errors'=> []
+            ]);
+            }
         else{
             return response()->json([
                 'status'=>false,
                 'errors'=> $validator->errors()
             ]);
         }
+}
+
+    // public function updateProfileImage(Request $request)
+    // {
+    //     $user = User::Find(Session::get('user')['id']);
+
+    //     $validator = Validator::make( $request->all(),[
+    //         'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    //     ]);
+
+    //     if($validator->passes()){
+
+    //          // Remove the existing profile image
+    //     if ($user->img_path) {
+    //         File::delete(storage_path('app/public/'.$user->img_path));
+    //     }
+    //         // Generate a unique filename for the profile image
+    //     $imageFileName = 'profile_image_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+
+    //     // Upload the new profile image
+    //     $imagePath = $request->file('image')->storeAs('images', $imageFileName, 'public');
+        
+    //     // Update profile image file path in the database
+        
+    //     $user->img_path = $imagePath;
+    //     $user->save();
+    //     session()->flash('success', 'Profile image updated successfully.');
+    //     return response()->json([
+    //         'status'=> true,
+    //         'errors'=> []
+    //     ]);
+    //     }
+    //     else{
+    //         return response()->json([
+    //             'status'=>false,
+    //             'errors'=> $validator->errors()
+    //         ]);
+    //     }
 
         
+    // }
+
+    public function addContactFormData(Request $req){
+        $req->validate([
+            'name'=>'required',
+            'email'=>'required|email',
+            'subject'=>'required',
+            'message'=>'required',
+        ]);
+        $data = DB::table('contacts')->insert([
+            'name'=> $req['name'],
+            'email'=>$req['email'],
+            'subject'=>$req['subject'],
+            'message'=>$req['message'],
+            'created_at'=>now(),
+            'updated_at'=>now(),
+        ]);
+        // event(new Registered($user));
+        // Auth::login($user);
+        // return redirect(RouteServiceProvider::Home);
+        if($data){
+            return redirect()->back()->with('message','Form Data Submitted Successfully');
+        }
+        else{
+            return redirect()->back()->with('error','Error');
+        }
     }
 }
