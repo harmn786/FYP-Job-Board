@@ -188,7 +188,12 @@ class JobSeekerController extends Controller
         $job= Job::where('id',$jobId)->first();
         $employer= $job->employer;
         $jobSeeker = auth()->user()->jobSeeker;
-
+        $pdfData = $jobSeeker->cv_path;
+        $headers = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline', // or 'attachment' to force download
+        ];
+        $resume = response($pdfData, 200, $headers);
         $mailData = [
             'employer' => $employer,
             'jobseeker'=> $jobSeeker,

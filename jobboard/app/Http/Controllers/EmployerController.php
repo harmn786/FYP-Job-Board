@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use App\Mail\NotificationEmailToAdminForApproveJob;
 use App\Mail\NotificationEmailToEmployerPostJob;
+use App\Mail\NotificationEmailToJobSeekerAfterApplicationStatusChange;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Pagination\Paginator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -266,7 +267,7 @@ class EmployerController extends Controller
             'approved_by_admin' => false,
         ]);
 
-        return redirect()->route('employer.editJob',$job)->with('success', 'Job details updated successfully.');
+        return redirect()->route('employer.editJob',$job)->with('success', 'Job details updated successfully and send to admin for approval changes.');
     }
 
     public function deleteJob(Request $request, Job $job)
@@ -308,9 +309,16 @@ class EmployerController extends Controller
         ]);
 
         $jobApplication = JobApplication::findOrFail($applicationId);
+        $job = $jobApplication->job;
+        $jobSeeker = $jobApplication->jobSeeker;
         $jobApplication->status = $request->status;
         $jobApplication->remarks = $request->remarks;
         $jobApplication->save();
+        $mailData = [
+            'jobSeeker'=>$jobSeeker,
+            'job' => $job,
+        ];
+        Mail::to($jobSeeker->email)->send(new NotificationEmailToJobSeekerAfterApplicationStatusChange($mailData));
 
         return redirect()->back()->with('success', 'Job application has been updated successfully.');
     }

@@ -174,7 +174,6 @@ html{
             background-color: #00008b;
             background-position: right center; /*change the direction of the change here*/
             text-decoration: none;
-            box-shadow: 0 0 20px #a7a2a2;
             color: #ffffff !important;
     }
     button.btn.btn-outline-success-hero,  a.btn.btn-outline-success-hero{
@@ -304,6 +303,9 @@ html{
         cursor: pointer;
       }
       @media(max-width:768px){
+        .contact-icons{
+          justify-content: center;
+        }
           .job-summery{
               padding-top: 20px;
           }

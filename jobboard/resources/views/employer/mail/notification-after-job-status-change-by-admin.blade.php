@@ -8,13 +8,9 @@
 </head>
 <body>
     <h1>Hello! {{ $mailData['employer']->name}}</h1>
-    <p>Here is a new applicant for the </p>
+    <p>Your Job Posting Status has been change By Admin against </p>
     <h3>Job Title: {{$mailData['job']->title}}</h3>
-    <p>Applicant Detail:</p>
-    <p>Applicant Name: {{$mailData['jobseeker']->name}}</p>
-    <p>Applicant Email: {{$mailData['jobseeker']->email}}</p>
-    
-    <p>Here is applicant detail Kindly review the applicant detail on the website and update the status accordingly</p>
+    <p>Kindly visit website to check your job status </p>
     
 </body>
 </html>

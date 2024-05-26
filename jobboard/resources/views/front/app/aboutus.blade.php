@@ -6,8 +6,8 @@
 <!-- About Start -->
 <div class="container-xxl py-5">
     <div class="container">
-        <h2 class="mt-4 mb-4">About Us</h2>
-        <div class="row g-5 align-items-center">
+        <h2 class=" mb-4">About Us</h2>
+        <div class="row g-5 mt-4 bg-white p-4 align-items-center">
             <div class="col-lg-6 ">
                 <div class="row g-0 about-bg rounded overflow-hidden">
                     <div class="col-6 text-start">
@@ -24,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+            <div class="col-lg-6 wow fadeIn " data-wow-delay="0.5s">
                 <h1 class="mb-4">We Help To Get The Best Job And Find A Talent</h1>
                 <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
                 <p><i class="fa fa-check text-primary me-3"></i>Tempor erat elitr rebum at clita</p>

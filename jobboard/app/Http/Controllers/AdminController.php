@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Mail\NotificationEmailToEmployerAfterJobstatusChangeByAdmin;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\Paginator;
 
@@ -101,15 +103,25 @@ class AdminController extends Controller
     {
         // Approve the job
         $job->update(['approved_by_admin' => true]);
-
+        $employer = $job->employer;
+        $mailData = [
+            'employer' => $employer,
+            'job' => $job,
+        ];
+        Mail::to($employer->email)->send(new NotificationEmailToEmployerAfterJobstatusChangeByAdmin($mailData));
         return redirect()->route('admin.jobApprovals')->with('success', 'Job Activated For Posting Successfully.');
+        
     }
-
     public function rejectJob(Job $job)
     {
         // Reject the job
         $job->update(['approved_by_admin' => false]);
-
+        $employer = $job->employer;
+        $mailData = [
+            'employer' => $employer,
+            'job' => $job,
+        ];
+        Mail::to($employer->email)->send(new NotificationEmailToEmployerAfterJobstatusChangeByAdmin($mailData));
         return redirect()->route('admin.jobApprovals')->with('success', 'Job Unactivated For Posting Successfully.');
     }
 

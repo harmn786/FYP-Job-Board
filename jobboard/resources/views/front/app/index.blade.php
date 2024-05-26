@@ -59,6 +59,9 @@
                 </div>
                 
             @endforeach
+            <div class="text-center mt-4">
+                <a class="text-decoration-none text-home " href="{{ route('categories') }}"><i class="fa fa-arrow-right"></i> View More</a>
+            </div>
             {{-- <div>
                 {{$jobs->links()}}
             </div> --}}
@@ -99,6 +102,9 @@
     </div>
 </div>
 @endforeach
+<div class="text-center">
+    <a class="text-decoration-none text-home" href="{{ route('explorejobs') }}"><i class="fa fa-arrow-right"></i> View More</a>
+</div>
 {{-- <div>
     {{$jobs->links()}}
 </div> --}}
@@ -138,6 +144,9 @@
     </div>
 </div>
 @endforeach
+<div class="text-center">
+    <a class="text-decoration-none text-home" href="{{ route('explorejobs') }}"><i class="fa fa-arrow-right"></i> View More</a>
+</div>
 {{-- <div>
     {{$featured_jobs->links()}}
 </div> --}}
@@ -177,7 +186,7 @@
         <h2>Contact Us</h2>
         <div class="row g-4 mt-5 mb-5 p-3 bg-white shadow ">
             <div class="col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29035.235998024!2d81.28556709234934!3d24.54068012824352!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39845a348b85dbbd%3A0xbc368e68a40a6da9!2sRewa%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1664383570024!5m2!1sen!2sin" width="530" height="470" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29035.235998024!2d81.28556709234934!3d24.54068012824352!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39845a348b85dbbd%3A0xbc368e68a40a6da9!2sRewa%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1664383570024!5m2!1sen!2sin" width="100%" height="470" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
             <div class="col-md-6">
                 @if(session()->get('message'))

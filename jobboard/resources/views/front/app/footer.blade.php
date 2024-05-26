@@ -19,7 +19,7 @@
         <p class="mb-2"><i class="fa fa-map me-3"></i>Liaquat Pur, Rahim Yar Khan</p>
         <p class="mb-2"><i class="fa fa-phone me-3"></i>+9123156575594</p>
         <p class="mb-2"><i class="fa fa-envelope me-3"></i>devbyabdulrehman@gmail.com</p>
-        <div class="d-flex pt-2">
+        <div class="d-flex contact-icons pt-2">
             <a class="btn btn-outline-light btn-social me-2" href="www.twitter.com" target="_blank"><i class="fa fa-twitter"></i></a>
             <a class="btn btn-outline-light btn-social me-2" href="wwww.facebook.com"><i class="fa fa-facebook"></i></a>
             <a class="btn btn-outline-light btn-social me-2" href="www.youtube.com"><i class="fa fa-youtube"></i></a>
