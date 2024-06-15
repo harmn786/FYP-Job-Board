@@ -28,7 +28,7 @@
     <div class="mb-3 password-container">
       <label for="password" class="form-label">Password<span class="text-danger fw-bold">*</span></label>
       <input name="password" value="{{old('password')}}" type="password" class="form-control @error('password') is-invalid  @enderror" id="password" placeholder="Enter Your Password">
-      <i class=" fa fa-sold fa-eye" id="show-password"></i>
+      <i class=" fa fa-sold fa-eye fa-eye-password" id="show-password"></i>
       <span class="text-danger">
         @error('password')
             {{$message}}

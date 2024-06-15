@@ -67,32 +67,6 @@ class JobSeekerController extends Controller
         return redirect()->route('editJobSeeker')->with('success', 'Profile details updated successfully.');
     }
 
-    // public function updateCV(Request $request)
-    // {
-    //     $user = auth()->user();
-    //     $jobSeeker = $user->jobSeeker;
-
-    //     $request->validate([
-    //         'cv' => 'required|mimes:pdf|max:2048', // Assuming PDF file format for CV
-    //     ]);
-
-    //     // Remove the existing CV file
-    //     if ($jobSeeker->cv_path) {
-    //         Storage::disk('public')->delete($jobSeeker->cv_path);
-    //     }
-
-    //     // Generate a unique filename for the CV
-    //     $cvFileName = 'cv_' . uniqid() . '.' . $request->file('cv')->getClientOriginalExtension();
-
-    //     // Upload the new CV
-    //     $cvPath = $request->file('cv')->storeAs('cv', $cvFileName, 'public');
-        
-    //     // Update CV file path in the database
-    //     $jobSeeker->update(['cv_path' => $cvPath]);
-
-    //     return redirect()->route('editJobSeeker')->with('success', 'CV updated successfully.');
-    // }
-
     public function updateCv(Request $request)
     {
         // Validate the uploaded file
@@ -116,17 +90,6 @@ class JobSeekerController extends Controller
         return back()->with('success', 'CV uploaded successfully!');
     }
 
-    // public function viewCV()
-    // {
-    //     $user = auth()->user();
-    //     $pdfFile = $user->jobSeeker->cv_path;
-         
-
-    //     return response()->streamDownload(function () use ($pdfFile) {
-    //         echo $pdfFile;
-    //     });
-    // }
-    
     public function viewCV()
     {
         $user = auth()->user();

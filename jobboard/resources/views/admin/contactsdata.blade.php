@@ -18,7 +18,7 @@
 @endif
 
   <div class="card border-0 shadow mb-4 p-3">
-    <h2>Users</h2>
+    <h2>Contacts</h2>
 
         @if(count($contactData) > 0)
         <div class="table-responsive">

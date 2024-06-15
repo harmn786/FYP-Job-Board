@@ -24,9 +24,10 @@
       </span>
       </div>
       
-      <div class="mb-3">
+      <div class="mb-3 password-container">
         <label for="password" class="form-label">Enter Your Password</label>
         <input type="password" value="{{old('password')}}" class="form-control @error('password') is-invalid  @enderror" id="password" name="password" placeholder="Enter Your Password">
+        <i class=" fa fa-sold fa-eye fa-eye-password" id="show-password"></i>
         <span class="text-danger">
           @error('password')
               {{$message}}
@@ -34,7 +35,8 @@
       </span>
       </div>
       <div class="mb-3">
-        <input type="password" value="admin" id="role" hidden class="form-control @error('role') is-invalid  @enderror" name="role" placeholder="Confirm Your Password">
+        <input type="text" value="admin" id="role" hidden class="form-control @error('role') is-invalid  @enderror" name="role" placeholder="Confirm Your Password">
+        
         <span class="text-danger">
           @error('role')
               {{$message}}
@@ -42,9 +44,10 @@
       </span>
       </div>
 
-      <div class="mb-3">
+      <div class="mb-3 password-container">
         <label for="confirm_password" class="form-label">Confirm Your Password</label>
         <input type="text" value="{{old('password_confirmation')}}" id="confirm_password" class="form-control @error('password_confirmation') is-invalid  @enderror" name="password_confirmation" placeholder="Confirm Your Password">
+        <i class=" fa fa-sold fa-eye fa-eye-password" id="show-confirm-password"></i>
         <span class="text-danger">
           @error('password_confirmation')
               {{$message}}
@@ -57,4 +60,23 @@
 </form>
   </div>
 </div>
+  @endsection
+  @section('customJs')
+  <script>
+    const showPassword = document.querySelector("#show-password");
+    const passwordField = document.querySelector("#password");
+    const showConfirmPassword = document.querySelector("#show-confirm-password");
+    const confirmPasswordField = document.querySelector("#confirm_password"); 
+    
+    showPassword.addEventListener("click",function(){
+      this.classList.toggle("fa-eye-slash");
+      const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+      passwordField.setAttribute("type",type);
+  });
+  showConfirmPassword.addEventListener("click",function(){
+      this.classList.toggle("fa-eye-slash");
+      const type = confirmPasswordField.getAttribute("type") === "password" ? "text" : "password";
+      confirmPasswordField.setAttribute("type",type);
+  });
+  </script>
   @endsection

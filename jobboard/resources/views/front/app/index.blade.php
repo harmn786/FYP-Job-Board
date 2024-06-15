@@ -79,7 +79,7 @@
     <div class="card border-0 p-3 shadow mb-4 mt-4">
         <div class="card-body">
             <h3 class="border-0 fs-5 pb-2 mb-0">{{ $job->title }}</h3>
-            <p>{{ Str::words(strip_tags($job->description), $words=5, '...') }}</p>
+            <p>{{ Str::words(strip_tags($job->description), $words=3, '...') }}</p>
             <div class="bg-light p-3 border">
                 <p class="mb-0">
                     <span class="fw-bolder"><i class="fa fa-map-marker"></i></span>
@@ -121,7 +121,7 @@
     <div class="card border-0 p-3 shadow mb-4 mt-4">
         <div class="card-body">
             <h3 class="border-0 fs-5 pb-2 mb-0">{{ $featured_job->title }}</h3>
-            <p>{{ Str::words(strip_tags($featured_job->description), $words=5, '...') }}</p>
+            <p>{{ Str::words(strip_tags($featured_job->description), $words=3, '...') }}</p>
             <div class="bg-light p-3 border">
                 <p class="mb-0">
                     <span class="fw-bolder"><i class="fa fa-map-marker"></i></span>
@@ -153,40 +153,13 @@
 </div>
 </div> 
 </div>
-{{-- <div class="col-md-4">
-    <div class="card border-0 p-3 shadow mb-4">
-        <div class="card-body">
-            <h3 class="border-0 fs-5 pb-2 mb-0">{{ $job->title }}</h3>
-            <p>We are in need of a {{ $job->title }} for our company.</p>
-            <div class="bg-light p-3 border">
-                <p class="mb-0">
-                    <span class="fw-bolder"><i class="fa fa-map-marker"></i></span>
-                    <span class="ps-1">{{ $job->location }}</span>
-                </p>
-                <p class="mb-0">
-                    <span class="fw-bolder"><i class="fa fa-clock-o"></i></span>
-                    <span class="ps-1">{{ $job->type }}</span>
-                </p>
-                <p class="mb-0">
-                    <span class="fw-bolder"><i class="fa fa-usd"></i></span>
-                    <span class="ps-1">${{ $job->salary }}</span>
-                </p>
-            </div>
 
-            <div class="d-grid mt-3">
-                <a href="{{ route('jobs.jobDetail', $job->id) }}" class="btn btn-success">View Details</a>
-            </div>
-        </div>
-    </div>
-</div>    --}}
-
- <!-- Contact Start -->
  <div class="pt-4 pb-5">
     <div class="container">
         <h2>Contact Us</h2>
         <div class="row g-4 mt-5 mb-5 p-3 bg-white shadow ">
             <div class="col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29035.235998024!2d81.28556709234934!3d24.54068012824352!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39845a348b85dbbd%3A0xbc368e68a40a6da9!2sRewa%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1664383570024!5m2!1sen!2sin" width="100%" height="470" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d55868.02126071222!2d70.87576950548232!3d28.935431936978834!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x393a24dd4a180f45%3A0x2ed1d7c69560ee66!2sLi%C4%81qatpur%2C%20Rahim%20Yar%20Khan%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2sin!4v1718087268596!5m2!1sen!2sin" width="100%" height="470" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
             <div class="col-md-6">
                 @if(session()->get('message'))
@@ -268,7 +241,7 @@
 <script>
     var i = 0;
     var txt = "Thounsands of jobs available.";
-    var speed = 80;
+    var speed = 90;
     function typeWriter() {
     if (i < txt.length) {
       document.getElementById("typing").innerHTML += txt.charAt(i);

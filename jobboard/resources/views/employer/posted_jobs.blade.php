@@ -62,10 +62,11 @@
                                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="{{ route('jobs.jobDetail', $job->id) }}"> <i class="fa fa-eye" aria-hidden="true"></i> View Detail</a></li>
                                         <li><a class="dropdown-item" href="{{ route('employer.editJob', $job) }}"><i class="fa fa-edit" aria-hidden="true"></i> Edit</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('jobs.jobDetail', $job->id) }}"> <i class="fa fa-solid fa-eye" aria-hidden="true"></i> View Detail</a></li>
+                                        
                                         <li><a class="dropdown-item" href="{{ route('employer.deleteJob', $job) }}" onclick="return confirm('Are you sure to want to delete this record')"><i class="fa fa-trash" aria-hidden="true" ></i> Delete</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('employer.showJobApplications', $job->id) }}"><i class="fa fa-eye" aria-hidden="true"></i> View Applications </a></li>
+                                        <li><a class="dropdown-item" href="{{ route('employer.showJobApplications', $job->id) }}"><i class="fa fa-folder-open-o" aria-hidden="true"></i> View Applications </a></li>
                                         <li><a class="dropdown-item" href="{{ route('downloadCVs', ['jobId' => $job->id]) }}"><i class="fa fa-download" aria-hidden="true"></i> Download CV Archives</a></li>
                                         <li><a class="dropdown-item" href="{{ route('job.applicants.download', ['jobId' => $job->id]) }}"><i class="fa fa-book" aria-hidden="true"></i> Export Applicant Detail</a></li>
                                     </ul>

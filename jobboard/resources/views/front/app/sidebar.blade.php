@@ -25,6 +25,8 @@ if(Session::has('user')){
             <p class="text-muted mb-1 fs-6">{{auth()->user()->jobSeeker->title}}</p>
             @elseif (auth()->user()->employer)
             <p class="text-muted mb-1 fs-6">{{auth()->user()->employer->company_name}}</p>
+            @elseif (auth()->user()->admin)
+            <p class="text-muted mb-1 fs-6">Administrator</p>
             @else
             <p class="text-muted mb-1 fs-6">New User</p>
             @endif

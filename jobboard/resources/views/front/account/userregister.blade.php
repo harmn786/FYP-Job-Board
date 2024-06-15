@@ -27,7 +27,7 @@
       <div class="mb-3 password-container">
         <label for="password" class="form-label">Password<span class="text-danger fw-bold">*</span></label>
         <input type="password" value="{{old('password')}}" class="form-control  @error('password') is-invalid  @enderror" id="password" name="password" placeholder="Enter Your Password">
-        <i class=" fa fa-sold fa-eye" id="show-password"></i>
+        <i class=" fa fa-sold fa-eye fa-eye-password" id="show-password"></i>
         <span class="text-danger">
           @error('password')
               {{$message}}
@@ -37,7 +37,7 @@
       <div class="mb-3 password-container">
         <label for="confirm_password" class="form-label">Confirm Password<span class="text-danger fw-bold">*</span></label>
         <input type="password" value="{{old('password_confirmation')}}" id="confirm_password" class="form-control @error('password_confirmation') is-invalid  @enderror" name="password_confirmation" placeholder="Confirm Your Password">
-        <i class=" fa fa-sold fa-eye" id="show-confirm-password"></i>
+        <i class=" fa fa-sold fa-eye fa-eye-password" id="show-confirm-password"></i>
         <span class="text-danger">
           @error('password_confirmation')
               {{$message}}

@@ -23,52 +23,53 @@ use App\Http\Controllers\JobApplication;
 //     return view('master');
 // });
 
-Route::get('/dashboard', function () {
-    return view('front.app.dashboard');
-})->middleware('verify')->name('dashboard');
+
 
 // Route::middleware('auth')->group(function () {
 //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 //     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // });
-Route::view("/userregister","front.account.userregister")->name('userregister');
-Route::view("/registerjob","registerjob")->name('addjob');
-Route::view("/userupdate","userupdate")->name('userupdate');
-Route::view("/userlogin","front.account.userlogin")->name('userlogin');
-Route::get('/explorejobs',[JobController::class,'exploreJobs'])->name('explorejobs');
-Route::view("/users","users")->name('users');
-Route::post('/addUserData',[UserController::class,'addUserData'])->name('add');
-Route::post('/addContactData',[UserController::class,'addContactFormData'])->name('addContactUsData');
-Route::post('/postjob',[UserController::class,'postJob'])->name('postjob');
-Route::post('/userlog',[UserController::class,'userLogin'])->name('userlog');
-Route::post('/changePassword',[UserController::class,'changePassword'])->name('changePassword');
-Route::view("uploadfile","uploadfile");
-Route::view("/contactus","front.app.contactus")->name('contactus');
-Route::view("/aboutus","front.app.aboutus")->name('aboutus');
-Route::post('updateUserData/{id}',[UserController::class,'update']);
-Route::get("/",[JobController::class,'index'])->name('home');
-Route::get('/categories', [JobController::class, 'categories'])->name('categories');
-Route::get('/jobs/{id}', [JobController::class,'jobDetail'])->name('jobs.jobDetail');
-Route::get('/job/category/{id}', [JobController::class,'jobsByCategory'])->name('jobs.jobsByCategory');
-Route::get('/jobsearch', [JobController::class, 'jobSearch'])->name('jobs.index');
-Route::get('/verify/{id}', [UserController::class, 'verify'])->name('verify');
-Route::get('/verification', [UserController::class, 'verification'])->name('verification');
-Route::get('/verificationEmailMessage', [UserController::class, 'verificationEmailMessage'])->name('verificationEmailMessage');
-Route::post('/user/updateProfileImage', [UserController::class, 'updateProfileImage'])->name('user.updateImage');
-Route::view("/adminRegister","front.account.adminregister")->name('adminRegister');
-Route::post('/addAdminData',[UserController::class,'addAdminData'])->name('addAdmin');
-Route::get("/forget-password",[UserController::class,'forgetPassword'])->name('forgetPassword');
-Route::post("/forget-password-post",[UserController::class,'forgetPasswordPost'])->name('forgetPasswordPost');
-Route::post("/reset-password-post",[UserController::class,'resetPasswordPost'])->name('resetPasswordPost');
-Route::get("/resetPassword/{token}",[UserController::class,'resetPassword'])->name('reset-password');
-Route::get('/logout', function () {
-    Session::forget('user');
-    return redirect('userlogin');
-});
+Route::get('/dashboard', function () {
+    return view('front.app.dashboard');
+})->middleware('verify')->name('dashboard');
+        Route::view("/userregister","front.account.userregister")->name('userregister');
+        Route::view("/registerjob","registerjob")->name('addjob');
+        Route::view("/userupdate","userupdate")->name('userupdate');
+        Route::view("/userlogin","front.account.userlogin")->name('userlogin');
+        Route::get('/explorejobs',[JobController::class,'exploreJobs'])->name('explorejobs');
+        Route::view("/users","users")->name('users');
+        Route::post('/addUserData',[UserController::class,'addUserData'])->name('add');
+        Route::post('/addContactData',[UserController::class,'addContactFormData'])->name('addContactUsData');
+        Route::post('/postjob',[UserController::class,'postJob'])->name('postjob');
+        Route::post('/userlog',[UserController::class,'userLogin'])->name('userlog');
+        Route::post('/changePassword',[UserController::class,'changePassword'])->name('changePassword');
+        Route::view("uploadfile","uploadfile");
+        Route::view("/contactus","front.app.contactus")->name('contactus');
+        Route::view("/aboutus","front.app.aboutus")->name('aboutus');
+        Route::post('updateUserData/{id}',[UserController::class,'update']);
+        Route::get("/",[JobController::class,'index'])->name('home');
+        Route::get('/categories', [JobController::class, 'categories'])->name('categories');
+        Route::get('/jobs/{id}', [JobController::class,'jobDetail'])->name('jobs.jobDetail');
+        Route::get('/job/category/{id}', [JobController::class,'jobsByCategory'])->name('jobs.jobsByCategory');
+        Route::get('/jobsearch', [JobController::class, 'jobSearch'])->name('jobs.index');
+        Route::get('/jobs/{id}/add-to-favorites',[JobSeekerController::class,'addToFavorites'])->name('jobs.addToFavorites');
+        Route::get('/verify/{id}', [UserController::class, 'verify'])->name('verify');
+        Route::get('/verification', [UserController::class, 'verification'])->name('verification');
+        Route::get('/verificationEmailMessage', [UserController::class, 'verificationEmailMessage'])->name('verificationEmailMessage');
+        Route::post('/user/updateProfileImage', [UserController::class, 'updateProfileImage'])->name('user.updateImage');
+        Route::view("/adminRegister","front.account.adminregister")->name('adminRegister');
+        Route::post('/addAdminData',[UserController::class,'addAdminData'])->name('addAdmin');
+        Route::get("/forget-password",[UserController::class,'forgetPassword'])->name('forgetPassword');
+        Route::post("/forget-password-post",[UserController::class,'forgetPasswordPost'])->name('forgetPasswordPost');
+        Route::post("/reset-password-post",[UserController::class,'resetPasswordPost'])->name('resetPasswordPost');
+        Route::get("/resetPassword/{token}",[UserController::class,'resetPassword'])->name('reset-password');
+        Route::get('/logout', function () {
+            Session::forget('user');
+            return redirect('userlogin');
+        });
 
 Route::middleware(['JobSeeker'])->group(function(){
-        Route::get('/jobs/{id}/add-to-favorites',[JobSeekerController::class,'addToFavorites'])->middleware('JobSeeker')->name('jobs.addToFavorites');
         Route::get('/favorites', [JobSeekerController::class, 'favorite_jobs'])->name('favorites.index');
         Route::post('/jobs/{id}/apply-job',[JobSeekerController::class,'applyJob'])->name('jobs.applyJob');
         // Route::get('/update/profile', [UserController::class, 'edit'])->middleware('auth')->middleware('auth','verify')->name('edit');

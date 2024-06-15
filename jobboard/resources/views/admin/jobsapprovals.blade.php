@@ -70,8 +70,8 @@
                                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="{{ route('jobs.jobDetail', $job->id) }}"> <i class="fa fa-eye" aria-hidden="true"></i> View Detail</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('admin.featuredJob', $job) }}"><i class="fa fa-edit" aria-hidden="true"></i>Add to Featured</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('jobs.jobDetail', $job->id) }}"> <i class="fa fa-solid fa-eye" aria-hidden="true"></i> View Detail</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('admin.featuredJob', $job) }}"><i class="fa fa-regular fa-star" aria-hidden="true"></i>Add to Featured</a></li>
                                         <li><a class="dropdown-item" href="{{ route('admin.unFeaturedJob', $job) }}"><i class="fa fa-trash" aria-hidden="true"></i> Remove From Featured</a></li>
                                         <li><a class="dropdown-item" href="{{ route('admin.approveJob', $job) }}"><i class="fa fa-edit" aria-hidden="true"></i>Active Job For Posting</a></li>
                                         <li><a class="dropdown-item" href="{{ route('admin.rejectJob', $job) }}"><i class="fa fa-trash" aria-hidden="true"></i>UnActive Job For Posting</a></li>
@@ -89,6 +89,9 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div>
+            {{$jobsPendingApproval->links()}}
         </div>
         @else
             <p>No jobs pending approval.</p>

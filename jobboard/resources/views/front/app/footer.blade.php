@@ -11,8 +11,8 @@
       <div class="col-lg-4 ">
         <h3 class="text-white mt-4 mt-4 ">Quick Links</h3>
         <a href="{{ route('home') }}" class="text-decoration-none text-white">Home</a><br>
-        <a href="{{ route('home') }}" class="text-decoration-none text-white" >About Us</a><br>
-        <a href="{{ route('home') }}" class="text-decoration-none text-white">Contact Us</a>
+        <a href="{{ route('aboutus') }}" class="text-decoration-none text-white" >About Us</a><br>
+        <a href="{{ route('contactus') }}" class="text-decoration-none text-white">Contact Us</a>
       </div>
       <div class="col-lg-4 ">
         <h3 class="text-white mt-4 mt-4 ">Contact</h3>

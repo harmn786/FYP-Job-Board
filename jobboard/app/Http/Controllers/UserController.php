@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\File;
 use App\Models\User;
 use App\Models\JobSeeker;
@@ -23,7 +24,7 @@ use Illuminate\Contracts\Session\Session as SessionSession;
 
 class UserController extends Controller
 {
-    
+
     public function forgetPassword(){
         return view('front.account.forget_password');
     }
@@ -157,52 +158,6 @@ class UserController extends Controller
         }
     }
 
-    public function postJob(Request $req){
-        $req->validate([
-            'job_title'=>'required',
-            'job_region'=>'required',
-            'job_type'=> 'required',
-            'vacancy'=>'required',
-            'job_category'=>'required',
-            'experience'=>'required',
-            'salary'=> 'required',
-            'gender'=>'required',
-            'application_deadline'=> 'required',
-            'job_description'=>'required',
-            'responsibilities'=>'required',
-            'education_experience'=>'required',
-            'other_benifits'=>'required',
-        ]);
-        $company = User::find(Session::get('user')['id']);
-        $user = DB::table('jobs')->insert([
-            'job_title'=> $req->job_title,
-            'job_region'=>$req->job_region,
-            'job_type'=> $req->job_type,
-            'vacancy'=>$req->vacancy,
-            'job_category'=>$req->job_category,
-            'experience'=>$req->experience,
-            'salary'=> $req->salary,
-            'gender'=>$req->gender,
-            'application_deadline'=> $req->application_deadline,
-            'job_description'=>$req->job_description,
-            'responsibilities'=>$req->responsibilities,
-            'education_experience'=>$req->education_experience,
-            'other_benifits'=>$req->other_benifits,
-            'company_id'=> $company->id,
-            'company_email'=> $company->email,
-            'company_name'=> $company->username,
-            'company_image'=>$company->img,
-            'created_at'=>now(),
-            'updated_at'=>now(),
-        ]);
-        if($user){
-            return redirect()->route('users')->with('message','Registered Successfully');
-        }
-        else{
-            return back()->withErrors('Error');
-        }
-        
-    }
     // function that authenticate the user for login
     public function userLogin(Request $req){
 
@@ -210,11 +165,7 @@ class UserController extends Controller
             'email'=>'required',
             'password'=>'required'
         ]);
-        // Another Mehod for authenticate
-        // $user =  User::where(['email'=>$req->email])->first();
-        // if(!$user || !Hash::check($req->password,$user->mypassword)){
-        //     return "<script>alert('Error')</script>";
-        // }
+
         if(Auth::attempt($req->only('email','password'))){
             $user = auth()->user();
             $req->session()->put('user',$user);
@@ -338,7 +289,7 @@ class UserController extends Controller
 {
     // Validate the uploaded image
     $validator = Validator::make( $request->all(),[
-                'image' => 'required|image|mimes:jpeg|max:2048',
+                'image' => 'required|image|mimes:jpeg,png|max:2048',
             ]);
     // Get the uploaded image
     $image = $request->file('image');
@@ -366,47 +317,6 @@ class UserController extends Controller
             ]);
         }
 }
-
-    // public function updateProfileImage(Request $request)
-    // {
-    //     $user = User::Find(Session::get('user')['id']);
-
-    //     $validator = Validator::make( $request->all(),[
-    //         'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    //     ]);
-
-    //     if($validator->passes()){
-
-    //          // Remove the existing profile image
-    //     if ($user->img_path) {
-    //         File::delete(storage_path('app/public/'.$user->img_path));
-    //     }
-    //         // Generate a unique filename for the profile image
-    //     $imageFileName = 'profile_image_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-
-    //     // Upload the new profile image
-    //     $imagePath = $request->file('image')->storeAs('images', $imageFileName, 'public');
-        
-    //     // Update profile image file path in the database
-        
-    //     $user->img_path = $imagePath;
-    //     $user->save();
-    //     session()->flash('success', 'Profile image updated successfully.');
-    //     return response()->json([
-    //         'status'=> true,
-    //         'errors'=> []
-    //     ]);
-    //     }
-    //     else{
-    //         return response()->json([
-    //             'status'=>false,
-    //             'errors'=> $validator->errors()
-    //         ]);
-    //     }
-
-        
-    // }
-
     public function addContactFormData(Request $req){
         $req->validate([
             'name'=>'required',
@@ -422,9 +332,7 @@ class UserController extends Controller
             'created_at'=>now(),
             'updated_at'=>now(),
         ]);
-        // event(new Registered($user));
-        // Auth::login($user);
-        // return redirect(RouteServiceProvider::Home);
+
         if($data){
             return redirect()->back()->with('message','Form Data Submitted Successfully');
         }

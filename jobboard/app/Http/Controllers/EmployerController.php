@@ -28,6 +28,7 @@ use ZipArchive;
 use League\Csv\Writer;
 use League\Csv\CannotInsertRecord;
 use Illuminate\Support\Facades\Response;
+use Purifier;
 
 
 class EmployerController extends Controller
@@ -91,9 +92,9 @@ class EmployerController extends Controller
             'location' => $request->input('job_region'),
             'gender' => $request->input('gender'),
             'application_deadline' => $request->input('application_deadline'),
-            'description' => $request->input('job_description'),
-            'other_requirements' => $request->input('other_requirements'),
-            'other_benifits' => $request->input('other_benifits'),
+            'description' => Purifier::clean($request->input('job_description')),
+            'other_requirements' => Purifier::clean($request->input('other_requirements')),
+            'other_benifits' =>Purifier::clean($request->input('other_benifits')),
             'company_name' => $request->input('company_name'),
             'company_email' => $request->input('company_email'),
             'category_id' => $request->input('category'),

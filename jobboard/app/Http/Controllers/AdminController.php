@@ -94,7 +94,7 @@ class AdminController extends Controller
     public function jobApprovals()
     {
         // Fetch jobs with pending approval
-        $jobsPendingApproval = Job::get();
+        $jobsPendingApproval = Job::paginate(5);
 
         return view('admin.jobsapprovals', compact('jobsPendingApproval'));
     }

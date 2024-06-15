@@ -118,5 +118,6 @@ class JobController extends Controller
         return view('front.app.search_result', compact('jobs'));
     }
     
+    
 
 }

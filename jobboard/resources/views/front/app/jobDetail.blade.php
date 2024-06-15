@@ -65,11 +65,11 @@
                       <div class="descript_wrap white-bg">
                           <div class="single_wrap">
                               <h4>Job description</h4>
-                            <p>{{ Str::words(strip_tags($job->description)) }}</p>
+                            <p>{!! $job->description !!}</p>
                           </div>
                           <div class="single_wrap">
                               <h4>Other Requirements</h4>
-                              {{ strip_tags($job->other_requirements) }}
+                              {!! $job->other_requirements !!}
                           </div>
                           <div class="single_wrap">
                               <h4>Qualifications</h4>
@@ -81,7 +81,7 @@
                         </div>
                           <div class="single_wrap">
                               <h4>Benefits</h4>
-                              <p>{{ Str::words(strip_tags($job->other_benifits)) }}</p>
+                              <p>{!! $job->other_benifits !!}</p>
                           </div>
                           <div class="border-bottom"></div>
                           <div class="pt-3 text-end">

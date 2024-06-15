@@ -43,64 +43,6 @@
           </div>
         </div>
       </div>
-      {{-- Employer Model --}}
-
-      {{-- <div class="modal fade" id="EmployerModal" tabindex="-1" aria-labelledby="employerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title pb-0" id="employerModalLabel">Change Profile Picture</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form action="" id="EmployerProfilePicForm" method="POST" enctype="multipart/form-data">
-                  <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Profile Image</label>
-                      <input type="file" class="form-control @error('image') is-invalid  @enderror" id="image"  name="image">
-                      <p class="text-danger" id="employer-image-error"></p>
-                      <p class="text-success" id="employer-image-success"></p>
-                    </span>
-                  </div>
-                  <div class="d-flex justify-content-end">
-                      <button type="submit" class="btn btn-primary mx-3">Update</button>
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  </div>
-                  
-              </form>
-            </div>
-          </div>
-        </div>
-      </div> --}}
-
-      {{-- Admin Model --}}
-      {{-- <div class="modal fade" id="AdminModal" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title pb-0" id="adminModalLabel">Change Profile Picture</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form action="" id="AdminProfilePicForm" method="POST" enctype="multipart/form-data">
-                  <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Profile Image</label>
-                      <input type="file" class="form-control @error('image') is-invalid  @enderror" id="image"  name="image">
-                      <p class="text-danger" id="admin-image-error"></p>
-                      <p class="text-success" id="admin-image-success"></p>
-                    </span>
-                  </div>
-                  <div class="d-flex justify-content-end">
-                      <button type="submit" class="btn btn-primary mx-3">Update</button>
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  </div>
-                  
-              </form>
-            </div>
-          </div>
-        </div>
-      </div> --}}
-
-
 
     {{View::make('front.app.footer')}}
 

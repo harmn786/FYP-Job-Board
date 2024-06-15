@@ -296,7 +296,7 @@ html{
       .password-container{
         position: relative;
       }
-      .fa-eye{
+      .fa-eye-password{
         position: absolute;
         top: 60%;
         right: 5%;
